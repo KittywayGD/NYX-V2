@@ -63,6 +63,39 @@ class PhysicsModule(BaseModule):
             logger.error(f"Erreur initialisation Physics: {e}")
             return False
 
+    def can_handle(self, query: str) -> float:
+        """Détermine si ce module peut gérer une requête physique"""
+        query_lower = query.lower()
+        score = 0.0
+
+        # Mots-clés français et anglais pour la physique
+        physics_keywords = {
+            'énergie': 0.9, 'energy': 0.9, 'force': 0.9,
+            'photon': 0.9, 'electron': 0.9, 'électron': 0.9,
+            'quantique': 0.9, 'quantum': 0.9, 'schrödinger': 0.95, 'heisenberg': 0.95,
+            'relativité': 0.9, 'relativity': 0.9, 'einstein': 0.9,
+            'température': 0.9, 'temperature': 0.9, 'chaleur': 0.8, 'heat': 0.8,
+            'entropie': 0.9, 'entropy': 0.9, 'thermodynamique': 0.9,
+            'électrique': 0.9, 'electric': 0.9, 'magnétique': 0.9, 'magnetic': 0.9,
+            'coulomb': 0.9, 'ampère': 0.9, 'maxwell': 0.9,
+            'vitesse': 0.7, 'velocity': 0.7, 'accélération': 0.8, 'acceleration': 0.8,
+            'masse': 0.7, 'mass': 0.7, 'momentum': 0.8,
+            'onde': 0.8, 'wave': 0.8, 'fréquence': 0.8, 'frequency': 0.8,
+            'nucléaire': 0.9, 'nuclear': 0.9, 'radioactif': 0.9,
+            'gravité': 0.8, 'gravity': 0.8, 'gravitationnel': 0.8,
+        }
+
+        # Vérifier les mots-clés
+        for keyword, weight in physics_keywords.items():
+            if keyword in query_lower:
+                score = max(score, weight)
+
+        # Formules physiques célèbres
+        if 'e=mc' in query_lower.replace(' ', '') or 'e = mc' in query_lower:
+            score = max(score, 0.95)
+
+        return min(score, 1.0)
+
     def execute(self, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
         Exécute une requête physique

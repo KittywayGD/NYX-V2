@@ -42,6 +42,40 @@ class ElectronicsModule(BaseModule):
             logger.error(f"Erreur initialisation Electronics: {e}")
             return False
 
+    def can_handle(self, query: str) -> float:
+        """Détermine si ce module peut gérer une requête électronique"""
+        query_lower = query.lower()
+        score = 0.0
+
+        # Mots-clés français et anglais pour l'électronique
+        electronics_keywords = {
+            'circuit': 0.9, 'résistance': 0.9, 'resistance': 0.9,
+            'voltage': 0.9, 'tension': 0.9, 'volt': 0.9,
+            'courant': 0.9, 'current': 0.9, 'ampere': 0.9, 'ampère': 0.9,
+            'ohm': 0.9, 'condensateur': 0.9, 'capacitor': 0.9, 'capacitance': 0.9,
+            'inducteur': 0.9, 'inductor': 0.9, 'inductance': 0.9,
+            'transistor': 0.95, 'diode': 0.95,
+            'amplificateur': 0.9, 'amplifier': 0.9, 'op-amp': 0.95,
+            'filtre': 0.9, 'filter': 0.9,
+            'impédance': 0.9, 'impedance': 0.9,
+            'résonance': 0.9, 'resonance': 0.9,
+            'puissance': 0.7, 'power': 0.7, 'watt': 0.8,
+            'fréquence': 0.7, 'frequency': 0.7,
+        }
+
+        # Vérifier les mots-clés
+        for keyword, weight in electronics_keywords.items():
+            if keyword in query_lower:
+                score = max(score, weight)
+
+        # Composants électroniques spécifiques
+        components = ['rc', 'rl', 'rlc', 'bjt', 'fet', 'mosfet']
+        for comp in components:
+            if comp in query_lower:
+                score = max(score, 0.9)
+
+        return min(score, 1.0)
+
     def execute(self, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
         Exécute une requête électronique
