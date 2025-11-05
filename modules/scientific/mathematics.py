@@ -19,6 +19,18 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+def _clean_sympy_objects(obj):
+    """Convertit récursivement les objets SymPy en strings pour la sérialisation JSON"""
+    if isinstance(obj, dict):
+        return {k: _clean_sympy_objects(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_clean_sympy_objects(item) for item in obj]
+    elif hasattr(obj, '__module__') and 'sympy' in obj.__module__:
+        return str(obj)
+    else:
+        return obj
+
+
 class MathematicsModule(BaseModule):
     """Module de mathématiques avancées"""
 
@@ -117,6 +129,9 @@ class MathematicsModule(BaseModule):
                 result = self._numerical_computation(query, context)
             else:
                 result = self._symbolic_computation(query, context)
+
+            # Nettoyer les objets SymPy pour la sérialisation JSON
+            result = _clean_sympy_objects(result)
 
             return {
                 "success": True,
