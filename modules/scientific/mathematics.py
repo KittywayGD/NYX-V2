@@ -191,12 +191,13 @@ class MathematicsModule(BaseModule):
 
         equation_str = equation_str.strip()
 
-        # Si la requête commence toujours par des mots, chercher l'équation avec '='
-        if '=' in equation_str:
-            # Extraire tout ce qui contient le signe '='
-            eq_match = re.search(r'([\w\s\+\-\*/\^\(\)\.]+\s*=\s*[\w\s\+\-\*/\^\(\)\.]+)', equation_str)
-            if eq_match:
-                equation_str = eq_match.group(1).strip()
+        # Convertir les exposants unicode en notation Python
+        unicode_superscripts = {
+            '²': '**2', '³': '**3', '⁴': '**4', '⁵': '**5',
+            '⁶': '**6', '⁷': '**7', '⁸': '**8', '⁹': '**9'
+        }
+        for unicode_exp, python_exp in unicode_superscripts.items():
+            equation_str = equation_str.replace(unicode_exp, python_exp)
 
         # Définir les symboles
         x, y, z, t = symbols('x y z t')
@@ -211,11 +212,11 @@ class MathematicsModule(BaseModule):
                 equation = sp.sympify(equation_str)
 
             # Résoudre
-            solutions = solve(equation)
+            solutions = solve(equation, x)
 
             return {
                 "equation": str(equation),
-                "solutions": [str(sol) for sol in solutions] if isinstance(solutions, list) else str(solutions),
+                "solutions": [str(sol) for sol in solutions] if isinstance(solutions, list) else [str(solutions)],
                 "method": "symbolic"
             }
         except Exception as e:
@@ -244,11 +245,12 @@ class MathematicsModule(BaseModule):
         try:
             function = sp.sympify(func_str)
             derivative = diff(function, x)
-            derivative_simplified = simplify(derivative)
+            # Ne pas simplifier automatiquement - garder la forme développée
+            derivative_expanded = sp.expand(derivative)
 
             return {
                 "function": str(function),
-                "derivative": str(derivative_simplified)
+                "derivative": str(derivative_expanded)
             }
         except Exception as e:
             return {"error": str(e), "function_input": func_str}
@@ -287,13 +289,32 @@ class MathematicsModule(BaseModule):
                 upper = sp.sympify(bounds_match.group(2))
                 integral_result = integrate(function, (x, lower, upper))
                 integral_type = "definite"
+
+                # Pour les intégrales définies, essayer d'évaluer numériquement
+                try:
+                    # Simplifier d'abord
+                    integral_result = sp.simplify(integral_result)
+                    # Essayer d'évaluer numériquement si possible
+                    if integral_result.is_number:
+                        numerical_value = float(integral_result.evalf())
+                        integral_str = str(integral_result)
+                        # Si c'est un entier simple, afficher aussi la valeur
+                        if abs(numerical_value - round(numerical_value)) < 1e-10:
+                            integral_str = f"{integral_result} = {int(round(numerical_value))}"
+                        else:
+                            integral_str = f"{integral_result} ≈ {numerical_value:.6f}"
+                    else:
+                        integral_str = str(integral_result)
+                except:
+                    integral_str = str(integral_result)
             else:
                 integral_result = integrate(function, x)
                 integral_type = "indefinite"
+                integral_str = str(integral_result)
 
             return {
                 "function": str(function),
-                "integral": str(integral_result),
+                "integral": integral_str,
                 "type": integral_type
             }
         except Exception as e:
