@@ -143,6 +143,9 @@ fi
 
 cd ..
 
+# Créer le dossier logs s'il n'existe pas
+mkdir -p logs
+
 # Étape 5: Lancer l'API Python
 echo -e "${BLUE}🚀 Lancement de l'API Backend...${NC}"
 
@@ -196,9 +199,6 @@ echo ""
 # Afficher les logs en temps réel
 echo -e "${BLUE}📋 Logs (tail -f logs/api.log):${NC}"
 echo -e "${YELLOW}────────────────────────────────────────────────────────${NC}"
-
-# Créer le dossier logs s'il n'existe pas
-mkdir -p logs
 
 # Tail les logs
 tail -f logs/api.log 2>/dev/null &
