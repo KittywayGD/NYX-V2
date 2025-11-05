@@ -1,0 +1,16 @@
+# API Backend Requirements
+
+# FastAPI et serveur
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.4.0
+python-multipart>=0.0.6
+
+# CORS et middleware
+fastapi-cors>=0.0.6
+
+# Validation et sérialisation
+pydantic-settings>=2.0.0
+python-json-logger>=2.0.7
+
+# Les dépendances scientifiques sont déjà dans le requirements.txt principal
