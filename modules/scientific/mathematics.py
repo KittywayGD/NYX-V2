@@ -48,6 +48,36 @@ class MathematicsModule(BaseModule):
             logger.error(f"Erreur initialisation Mathematics: {e}")
             return False
 
+    def can_handle(self, query: str) -> float:
+        """Détermine si ce module peut gérer une requête mathématique"""
+        query_lower = query.lower()
+        score = 0.0
+
+        # Mots-clés français et anglais
+        math_keywords = {
+            'résoudre': 0.9, 'solve': 0.9, 'équation': 0.9, 'equation': 0.9,
+            'dérivée': 0.9, 'derivative': 0.9, 'dériver': 0.9,
+            'intégrale': 0.9, 'integral': 0.9, 'intégrer': 0.9,
+            'limite': 0.9, 'limit': 0.9, 'lim': 0.9,
+            'matrice': 0.9, 'matrix': 0.9, 'déterminant': 0.8,
+            'série': 0.8, 'series': 0.8, 'taylor': 0.9,
+            'optimiser': 0.8, 'optimize': 0.8, 'minimum': 0.7, 'maximum': 0.7,
+            'calculer': 0.5, 'calculate': 0.5, 'simplifier': 0.7,
+        }
+
+        # Vérifier les mots-clés
+        for keyword, weight in math_keywords.items():
+            if keyword in query_lower:
+                score = max(score, weight)
+
+        # Symboles mathématiques
+        math_symbols = ['=', '²', '³', '^', 'x', 'sin', 'cos', 'exp', 'log']
+        symbol_count = sum(1 for s in math_symbols if s in query_lower)
+        if symbol_count >= 2:
+            score = max(score, 0.7)
+
+        return min(score, 1.0)
+
     def execute(self, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
         Exécute une requête mathématique
