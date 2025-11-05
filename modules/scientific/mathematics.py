@@ -31,6 +31,17 @@ def _clean_sympy_objects(obj):
         return obj
 
 
+def _add_implicit_multiplication(expr_str: str) -> str:
+    """Ajoute la multiplication implicite (ex: 2x → 2*x, 3xy → 3*x*y)"""
+    # Pattern pour nombre suivi d'une lettre sans opérateur entre eux
+    expr_str = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', expr_str)
+    # Pattern pour lettre suivie d'une autre lettre (xy → x*y)
+    # ATTENTION: Ne pas casser les fonctions comme sin, cos, exp, log
+    expr_str = re.sub(r'([a-zA-Z])([a-zA-Z])', lambda m: f"{m.group(1)}*{m.group(2)}"
+                      if m.group(0) not in ['sin', 'cos', 'tan', 'exp', 'log', 'ln'] else m.group(0), expr_str)
+    return expr_str
+
+
 class MathematicsModule(BaseModule):
     """Module de mathématiques avancées"""
 
@@ -199,6 +210,9 @@ class MathematicsModule(BaseModule):
         for unicode_exp, python_exp in unicode_superscripts.items():
             equation_str = equation_str.replace(unicode_exp, python_exp)
 
+        # Ajouter la multiplication implicite (2x → 2*x)
+        equation_str = _add_implicit_multiplication(equation_str)
+
         # Définir les symboles
         x, y, z, t = symbols('x y z t')
         a, b, c, n = symbols('a b c n')
@@ -242,6 +256,14 @@ class MathematicsModule(BaseModule):
                 func_str = re.sub(kw, '', func_str, flags=re.IGNORECASE)
             func_str = func_str.strip()
 
+        # Convertir les exposants unicode en notation Python
+        unicode_superscripts = {
+            '²': '**2', '³': '**3', '⁴': '**4', '⁵': '**5',
+            '⁶': '**6', '⁷': '**7', '⁸': '**8', '⁹': '**9'
+        }
+        for unicode_exp, python_exp in unicode_superscripts.items():
+            func_str = func_str.replace(unicode_exp, python_exp)
+
         try:
             function = sp.sympify(func_str)
             derivative = diff(function, x)
@@ -278,6 +300,14 @@ class MathematicsModule(BaseModule):
             func_str = re.sub(r'\s+(?:from|de)\s+.+', '', func_str, flags=re.IGNORECASE)
             func_str = func_str.strip()
 
+        # Convertir les exposants unicode en notation Python
+        unicode_superscripts = {
+            '²': '**2', '³': '**3', '⁴': '**4', '⁵': '**5',
+            '⁶': '**6', '⁷': '**7', '⁸': '**8', '⁹': '**9'
+        }
+        for unicode_exp, python_exp in unicode_superscripts.items():
+            func_str = func_str.replace(unicode_exp, python_exp)
+
         # Chercher des bornes (from X to Y, de X à Y)
         bounds_match = re.search(r'(?:from|de)\s+(\S+)\s+(?:to|à)\s+(\S+)', query, re.IGNORECASE)
 
@@ -285,8 +315,14 @@ class MathematicsModule(BaseModule):
             function = sp.sympify(func_str)
 
             if bounds_match:
-                lower = sp.sympify(bounds_match.group(1))
-                upper = sp.sympify(bounds_match.group(2))
+                # Parser les bornes en reconnaissant 'e' comme la constante E
+                lower_str = bounds_match.group(1)
+                upper_str = bounds_match.group(2)
+
+                # Remplacer 'e' par la constante E de SymPy
+                lower = E if lower_str.lower() == 'e' else sp.sympify(lower_str)
+                upper = E if upper_str.lower() == 'e' else sp.sympify(upper_str)
+
                 integral_result = integrate(function, (x, lower, upper))
                 integral_type = "definite"
 
@@ -300,7 +336,7 @@ class MathematicsModule(BaseModule):
                         integral_str = str(integral_result)
                         # Si c'est un entier simple, afficher aussi la valeur
                         if abs(numerical_value - round(numerical_value)) < 1e-10:
-                            integral_str = f"{integral_result} = {int(round(numerical_value))}"
+                            integral_str = f"{int(round(numerical_value))}"
                         else:
                             integral_str = f"{integral_result} ≈ {numerical_value:.6f}"
                     else:
