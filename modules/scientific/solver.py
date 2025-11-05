@@ -1,5 +1,5 @@
 """
-Moteur de résolution scientifique unifié
+Moteur de résolution scientifique unifié pour Nyx
 Coordonne les modules Math, Physique et Électronique
 """
 

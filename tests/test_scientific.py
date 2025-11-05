@@ -1,5 +1,5 @@
 """
-Tests pour les modules scientifiques de Jarvis
+Tests pour les modules scientifiques de Nyx
 """
 
 import sys
@@ -8,7 +8,7 @@ from pathlib import Path
 # Ajouter le répertoire parent au path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from core import Jarvis
+from core import Nyx
 import json
 
 
@@ -18,7 +18,7 @@ def test_mathematics():
     print("TEST: Module Mathématiques")
     print("="*60)
 
-    jarvis = Jarvis()
+    nyx = Nyx()
 
     tests = [
         {
@@ -45,7 +45,7 @@ def test_mathematics():
         print(f"\n📝 Test: {test['name']}")
         print(f"   Requête: {test['query']}")
 
-        response = jarvis.ask(test["query"], validate=False)
+        response = nyx.ask(test["query"], validate=False)
 
         if response.get("success"):
             print("   ✓ Succès")
@@ -69,7 +69,7 @@ def test_physics():
     print("TEST: Module Physique")
     print("="*60)
 
-    jarvis = Jarvis()
+    nyx = Nyx()
 
     tests = [
         {
@@ -101,7 +101,7 @@ def test_physics():
         if test.get("context"):
             print(f"   Context: {test['context']}")
 
-        response = jarvis.ask(test["query"], context=test.get("context"), validate=False)
+        response = nyx.ask(test["query"], context=test.get("context"), validate=False)
 
         if response.get("success"):
             result_str = str(response.get("result"))
@@ -133,7 +133,7 @@ def test_electronics():
     print("TEST: Module Électronique")
     print("="*60)
 
-    jarvis = Jarvis()
+    nyx = Nyx()
 
     tests = [
         {
@@ -164,7 +164,7 @@ def test_electronics():
         print(f"   Requête: {test['query']}")
         print(f"   Context: {test['context']}")
 
-        response = jarvis.ask(test["query"], context=test["context"], validate=False)
+        response = nyx.ask(test["query"], context=test["context"], validate=False)
 
         if response.get("success"):
             result_str = str(response.get("result"))
@@ -193,7 +193,7 @@ def test_recursive_validation():
     print("TEST: Validation Récursive")
     print("="*60)
 
-    jarvis = Jarvis()
+    nyx = Nyx()
 
     # Test avec validation activée
     print("\n📝 Test avec validation récursive")
@@ -217,7 +217,7 @@ def test_scientific_solver():
     print("TEST: Scientific Solver")
     print("="*60)
 
-    jarvis = Jarvis()
+    nyx = Nyx()
 
     # Test de problème complexe
     print("\n📝 Test résolution de problème complexe")
@@ -238,7 +238,7 @@ def test_scientific_solver():
 def run_all_tests():
     """Exécute tous les tests"""
     print("\n" + "="*60)
-    print("NYX-V2 JARVIS - SUITE DE TESTS")
+    print("NYX-V2 - SUITE DE TESTS")
     print("="*60)
 
     total_passed = 0

@@ -1,5 +1,5 @@
 """
-Module de mathématiques avancées pour Jarvis
+Module de mathématiques avancées pour Nyx
 Calculs symboliques, équations différentielles, algèbre, analyse, etc.
 """
 

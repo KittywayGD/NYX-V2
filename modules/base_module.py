@@ -1,5 +1,5 @@
 """
-Classe de base pour tous les modules Jarvis
+Classe de base pour tous les modules Nyx
 """
 
 from abc import ABC, abstractmethod
@@ -8,7 +8,7 @@ import json
 
 
 class BaseModule(ABC):
-    """Classe de base abstraite pour tous les modules Jarvis"""
+    """Classe de base abstraite pour tous les modules Nyx"""
 
     def __init__(self, name: str, version: str = "1.0.0"):
         """

@@ -1,11 +1,11 @@
 """
-Module de physique extrême pour Jarvis
+Module de physique extrême pour Nyx
 Mécanique quantique, relativité, thermodynamique, électromagnétisme, etc.
 """
 
 import numpy as np
 import sympy as sp
-from sympy import symbols, exp, sqrt, pi, I, hbar, Symbol
+from sympy import symbols, exp, sqrt, pi, I, Symbol
 from scipy import constants
 from typing import Dict, Any, Optional, Union
 import logging
