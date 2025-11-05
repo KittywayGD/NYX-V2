@@ -1,396 +1,220 @@
-# NYX-V2
+# NYX-V2 - Assistant Scientifique Intelligent 🚀
 
-## Assistant Scientifique Modulaire et Récursif
+![Version](https://img.shields.io/badge/version-2.0.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Python](https://img.shields.io/badge/python-3.8+-yellow)
+![Node](https://img.shields.io/badge/node-18+-green)
 
-**Version:** 1.0.0
-**Auteur:** NYX-V2
-**Licence:** MIT
+NYX-V2 est un assistant scientifique intelligent avec interface graphique Electron, capable de résoudre des problèmes avancés en mathématiques, physique et électronique, avec des visualisations interactives en temps réel.
 
----
+## 🎯 Fonctionnalités
 
-## 📋 Description
+### ✨ Interface Graphique Moderne
+- **Electron + React** avec design moderne dark theme
+- **Chat interactif** avec l'assistant
+- **3 Sandboxes côte à côte** pour visualisations
 
-NYX-V2 est un assistant scientifique avancé inspiré de J.A.R.V.I.S. (Just A Rather Very Intelligent System). Il est conçu pour résoudre des problèmes complexes en mathématiques, physique et électronique grâce à :
+### 📊 Mathématiques
+- Traçage 2D/3D interactif avec **Plotly.js**
+- Courbes paramétriques et polaires
+- Champs de vecteurs
+- Animations avec paramètres variables
+- Analyse automatique (zéros, extrema, points critiques)
+- **Export PNG/SVG/JSON**
 
-- **Architecture modulaire** : Modules indépendants et extensibles
-- **Validation récursive** : Vérification automatique et correction des erreurs
-- **Multi-domaines** : Mathématiques avancées, physique extrême, électronique
+### 🎯 Physique
+- Simulations en temps réel avec **Matter.js**
+- Projectiles avec analyse énergétique
+- Pendule simple (amorti/non-amorti)
+- Collisions élastiques/inélastiques
+- Propagation d'ondes
 
----
+### ⚡ Électronique
+- **Dessin de circuits** interactif
+- Simulation RC/RL/RLC
+- Diagrammes de Bode
+- Analyseur de circuits
+- Visualisation temporelle et fréquentielle
 
-## 🚀 Fonctionnalités Principales
+### 🧩 Système de Plugins
+- Ajoutez vos propres modules facilement
+- Hot-reload sans redémarrage
+- Template generator inclus
 
-### Module Mathématiques Avancées
-- ✅ Résolution d'équations algébriques et différentielles
-- ✅ Calcul symbolique (dérivées, intégrales, limites)
-- ✅ Algèbre linéaire (matrices, vecteurs, eigenvalues)
-- ✅ Développements en série (Taylor, Fourier)
-- ✅ Optimisation de fonctions
-- ✅ Analyse numérique
+### 🤖 Intent System Avancé
+- Détection automatique d'intentions
+- Support bilingue (FR/EN)
+- Routing intelligent vers les modules
 
-### Module Physique Extrême
-- ✅ Mécanique quantique (Schrödinger, Heisenberg)
-- ✅ Relativité (restreinte et générale)
-- ✅ Thermodynamique et statistique
-- ✅ Électromagnétisme (Maxwell, ondes)
-- ✅ Mécanique classique
-- ✅ Physique nucléaire et des particules
-- ✅ Astrophysique
+## 🚀 Démarrage Rapide (Une Commande!)
 
-### Module Électronique
-- ✅ Analyse de circuits (DC/AC)
-- ✅ Circuits RC, RL, RLC
-- ✅ Design de filtres (passe-bas, passe-haut, passe-bande)
-- ✅ Amplificateurs opérationnels
-- ✅ Calculs d'impédance et résonance
-- ✅ Transistors et composants actifs
-
-### Système de Validation Récursive
-- ✅ Vérification automatique des résultats
-- ✅ Correction itérative des erreurs
-- ✅ Validation croisée avec méthodes alternatives
-- ✅ Score de confiance pour chaque résultat
-
----
-
-## 📦 Installation
-
-### Prérequis
-- Python 3.8 ou supérieur
-- pip (gestionnaire de paquets Python)
-
-### Installation des dépendances
-
+### Linux / Mac
 ```bash
-cd NYX-V2
-pip install -r requirements.txt
+./start-nyx.sh
 ```
 
-### Dépendances principales
-- `numpy` - Calculs numériques
-- `scipy` - Fonctions scientifiques avancées
-- `sympy` - Calculs symboliques
-- `matplotlib` - Visualisation (optionnel)
-- `pint` - Gestion des unités
+### Windows (PowerShell)
+```powershell
+.\start-nyx.ps1
+```
 
----
+**C'est tout!** Le script va:
+1. ✅ Vérifier les prérequis
+2. ✅ Faire `git pull origin main`
+3. ✅ Installer/mettre à jour les dépendances
+4. ✅ Lancer l'API backend
+5. ✅ Lancer l'application Electron
+6. ✅ Afficher les logs en temps réel
 
-## 🎯 Utilisation
+**Appuyez sur Ctrl+C pour tout arrêter proprement.**
 
-### Lancement rapide
+## 💬 Exemples
+
+```
+Tracer la fonction sin(x)*exp(-x)
+```
+→ Graphique 2D interactif avec Plotly
+
+```
+Simuler un projectile lancé à 45° avec vitesse 20m/s
+```
+→ Simulation Matter.js + graphiques énergie
+
+```
+Circuit RC avec R=1kΩ, C=1µF
+```
+→ Schéma + graphiques temporels
+
+[Plus d'exemples dans README_GUI.md](README_GUI.md)
+
+## 📦 Installation Manuelle
+
+### Prérequis
+- Python 3.8+
+- Node.js 18+
+- npm 8+
+- git
+
+### Installation
 
 ```bash
+# Clone
+git clone https://github.com/KittywayGD/NYX-V2.git
+cd NYX-V2
+
+# Python
+python -m venv venv
+source venv/bin/activate  # Linux/Mac | venv\Scripts\activate (Windows)
+pip install -r requirements.txt
+pip install -r api/requirements.txt
+
+# Node.js
+cd electron-app
+npm install
+cd ..
+```
+
+### Lancement Manuel (2 terminaux)
+
+**Terminal 1 - API:**
+```bash
+cd api
 python main.py
 ```
 
-### Utilisation en Python
-
-```python
-from core import Nyx
-
-# Initialiser Nyx
-nyx = Nyx()
-
-# Poser une question
-response = nyx.ask("Résoudre x² - 4 = 0")
-print(response)
-
-# Résoudre un problème avec paramètres
-response = nyx.ask(
-    "Calculer l'énergie d'un photon",
-    context={"frequency": 5e14}
-)
-
-# Résoudre un problème complexe
-response = nyx.solve(
-    "Circuit RC",
-    parameters={"resistance": 1000, "capacitance": 1e-6}
-)
-```
-
----
-
-## 📖 Exemples d'Utilisation
-
-### Exemple 1 : Mathématiques
-
-```python
-from core import Jarvis
-
-jarvis = Jarvis()
-
-# Résoudre une équation
-response = nyx.ask("Résoudre 2x + 5 = 13")
-# Résultat: x = 4
-
-# Calculer une dérivée
-response = nyx.ask("Dérivée de sin(x) * exp(x)")
-# Résultat: exp(x)*sin(x) + exp(x)*cos(x)
-
-# Calculer une intégrale
-response = nyx.ask("Intégrale de x² de 0 à 2")
-# Résultat: 8/3
-```
-
-### Exemple 2 : Physique
-
-```python
-# Calculer l'énergie d'un photon (lumière verte)
-response = nyx.ask(
-    "Énergie d'un photon",
-    context={"frequency": 5.5e14}  # Hz
-)
-# E = h·ν ≈ 3.64 × 10⁻¹⁹ J
-
-# Calculer E=mc²
-response = nyx.ask(
-    "mass-energy equivalence",
-    context={"mass": 0.001}  # 1 gramme
-)
-# E = 9 × 10¹³ J (90 térajoules!)
-
-# Principe d'incertitude de Heisenberg
-response = nyx.ask("Principe d'incertitude de Heisenberg")
-# Δx·Δp ≥ ℏ/2
-```
-
-### Exemple 3 : Électronique
-
-```python
-# Loi d'Ohm
-response = nyx.ask(
-    "Calculer le courant",
-    context={"voltage": 12, "resistance": 100}
-)
-# I = 0.12 A (120 mA)
-
-# Circuit RC
-response = nyx.ask(
-    "Circuit RC",
-    context={"resistance": 10000, "capacitance": 100e-9}
-)
-# τ = 1 ms, f_c = 159 Hz
-
-# Diviseur de tension
-response = nyx.ask(
-    "Diviseur de tension",
-    context={"R1": 1000, "R2": 2000, "V_in": 12}
-)
-# V_out = 8V
-```
-
-### Exemple 4 : Validation Récursive
-
-```python
-# Avec validation activée (par défaut)
-response = nyx.ask("Résoudre x³ - 8 = 0", validate=True)
-
-print(response["validation"])
-# {
-#   "status": "valid",
-#   "confidence": 0.95,
-#   "iterations": 2,
-#   "errors": []
-# }
-```
-
----
-
-## 🏗️ Architecture
-
-```
-NYX-V2/
-├── core/
-│   ├── __init__.py
-│   ├── nyx.py                 # Système principal
-│   ├── module_manager.py      # Gestionnaire de modules
-│   └── recursive_validator.py # Validation récursive
-│
-├── modules/
-│   ├── base_module.py         # Classe de base
-│   └── scientific/
-│       ├── mathematics.py     # Module maths
-│       ├── physics.py         # Module physique
-│       ├── electronics.py     # Module électronique
-│       └── solver.py          # Solver unifié
-│
-├── config/
-│   └── modules.json           # Configuration
-│
-├── tests/
-│   └── test_scientific.py     # Tests unitaires
-│
-├── main.py                    # Point d'entrée
-├── requirements.txt           # Dépendances
-└── README.md                  # Documentation
-```
-
----
-
-## 🧪 Tests
-
-### Exécuter les tests
-
+**Terminal 2 - Electron:**
 ```bash
-python tests/test_scientific.py
+cd electron-app
+npm start
 ```
 
-### Tests disponibles
-- ✅ Module Mathématiques (équations, dérivées, intégrales)
-- ✅ Module Physique (constantes, formules, calculs)
-- ✅ Module Électronique (circuits, composants)
-- ✅ Validation récursive
-- ✅ Solver scientifique unifié
+## 📖 Documentation
 
----
+- **Guide Complet**: [README_GUI.md](README_GUI.md)
+- **Architecture**: [ARCHITECTURE.md](ARCHITECTURE.md)
+- **API Docs**: http://localhost:8000/docs (quand l'API tourne)
 
-## 🔧 Configuration
+## 🧩 Créer un Plugin
 
-Le fichier `config/modules.json` permet de configurer :
+```python
+from core.plugin_system import create_plugin_template
 
-- Activation/désactivation des modules
-- Paramètres de validation récursive
-- Niveau de logging
-- Précision numérique
-- Timeouts
-
-```json
-{
-  "recursive_validation": {
-    "enabled": true,
-    "max_iterations": 3,
-    "min_confidence": 0.85
-  }
-}
+create_plugin_template('mon_plugin')
 ```
 
----
+## 🎨 Screenshots
 
-## 📊 API Reference
+### Interface Principale
+![Chat + Sandbox](docs/screenshots/main-interface.png)
 
-### Classe Nyx
+### Math Sandbox (Plotly.js)
+![Math Plot](docs/screenshots/math-sandbox.png)
 
-#### `nyx.ask(query, context=None, validate=True, module=None)`
-Pose une question à Nyx.
+### Physics Sandbox (Matter.js)
+![Physics Sim](docs/screenshots/physics-sandbox.png)
 
-**Paramètres:**
-- `query` (str): La question ou requête
-- `context` (dict, optionnel): Contexte avec paramètres
-- `validate` (bool): Active la validation récursive
-- `module` (str, optionnel): Force l'utilisation d'un module spécifique
+### Electronics Sandbox
+![Circuit](docs/screenshots/electronics-sandbox.png)
 
-**Retour:** Dictionnaire avec les résultats
+## 🔧 Technologies
 
-#### `nyx.solve(problem, parameters=None, validate=True)`
-Résout un problème scientifique complexe.
+**Backend:**
+- Python 3.8+
+- FastAPI
+- SymPy, NumPy, SciPy
 
-#### `nyx.get_status()`
-Retourne le statut du système.
+**Frontend:**
+- Electron 27+
+- React 18+
+- TypeScript
+- Tailwind CSS
+- Plotly.js
+- Matter.js
+- Zustand
 
-#### `nyx.list_modules()`
-Liste tous les modules disponibles.
+## 📊 Statistiques
 
-#### `nyx.get_capabilities()`
-Retourne toutes les capacités disponibles.
-
----
-
-## 🎓 Capacités Scientifiques Détaillées
-
-### Mathématiques
-- Algèbre: équations polynomiales, systèmes d'équations
-- Analyse: dérivées, intégrales (définies et indéfinies), limites
-- Équations différentielles: ordinaires et partielles
-- Algèbre linéaire: matrices, déterminants, vecteurs propres
-- Optimisation: recherche de minima/maxima
-- Séries: Taylor, Maclaurin, Fourier
-- Analyse numérique: approximations, interpolations
-
-### Physique
-- **Quantique**: équation de Schrödinger, principe d'Heisenberg, longueur d'onde de De Broglie
-- **Relativité**: E=mc², dilatation du temps, contraction des longueurs, trous noirs
-- **Thermodynamique**: lois des gaz parfaits, entropie, rayonnement du corps noir
-- **Électromagnétisme**: loi de Coulomb, champs électriques/magnétiques, loi d'Ampère
-- **Mécanique**: énergie cinétique/potentielle, forces, momentum
-- **Ondes**: fréquence, longueur d'onde, effet Doppler
-
-### Électronique
-- **Circuits DC**: loi d'Ohm, lois de Kirchhoff, diviseurs de tension
-- **Circuits AC**: impédance, réactance, déphasage
-- **Filtres**: passe-bas, passe-haut, passe-bande, résonance
-- **Composants**: résistances, condensateurs, inductances
-- **Amplificateurs**: op-amp inverseurs/non-inverseurs
-- **Analyse fréquentielle**: diagrammes de Bode, fonction de transfert
-
----
-
-## 🚧 Limitations Actuelles
-
-- Pas de support pour la biologie/chimie (comme demandé)
-- Pas d'interface graphique (CLI uniquement)
-- Pas de visualisation graphique automatique
-- Parsing limité des équations en langage naturel français
-
----
-
-## 🔮 Développements Futurs
-
-- [ ] Interface graphique (GUI)
-- [ ] Visualisation graphique des résultats
-- [ ] Export des résultats (PDF, LaTeX)
-- [ ] Base de données de problèmes résolus
-- [ ] Module d'apprentissage automatique
-- [ ] Support multilingue amélioré
-- [ ] API REST pour intégration externe
-- [ ] Module de chimie (optionnel)
-
----
+- **~10,000 lignes de code**
+- **3 sandboxes interactifs**
+- **15+ endpoints API**
+- **Système de plugins complet**
+- **Bilingue** (FR/EN)
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! Pour contribuer :
-
 1. Fork le projet
-2. Créer une branche (`git checkout -b feature/AmazingFeature`)
-3. Commit les changements (`git commit -m 'Add AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
+2. Créer une branche: `git checkout -b feature/ma-feature`
+3. Commit: `git commit -m 'Add ma-feature'`
+4. Push: `git push origin feature/ma-feature`
+5. Pull Request
+
+## 📝 Changelog
+
+### v2.0.0 (2025-01-XX)
+- ✨ Interface Electron + React
+- ✨ Plotly.js pour graphiques interactifs
+- ✨ Matter.js pour simulations physiques
+- ✨ Circuit drawing
+- ✨ Système de plugins
+- ✨ Export PNG/SVG/JSON
+- ✨ Script de démarrage unifié
+
+### v1.0.0
+- ✅ Modules scientifiques de base
+- ✅ CLI interface
+
+## 📄 Licence
+
+MIT License
+
+## 🆘 Support
+
+- **Documentation**: [README_GUI.md](README_GUI.md)
+- **Issues**: [GitHub Issues](https://github.com/KittywayGD/NYX-V2/issues)
+- **API Docs**: http://localhost:8000/docs
 
 ---
 
-## 📝 Licence
+**NYX-V2** - L'assistant scientifique qui comprend vraiment vos questions 🚀
 
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
-
----
-
-## 🙏 Remerciements
-
-- **SymPy** - Moteur de calcul symbolique
-- **SciPy** - Constantes et fonctions scientifiques
-- **NumPy** - Calculs numériques performants
-- **Inspiration**: J.A.R.V.I.S. de Marvel/Iron Man
-
----
-
-## 📧 Contact
-
-Pour toute question ou suggestion :
-- Ouvrir une issue sur GitHub
-- Contribuer au projet
-
----
-
-## 🎯 Citation
-
-Si vous utilisez NYX-V2 dans vos travaux, merci de citer :
-
-```
-NYX-V2 - Assistant Scientifique Modulaire et Récursif
-Version 1.0.0
-https://github.com/KittywayGD/NYX-V2
-```
-
----
-
-**Fait avec ❤️ pour la science et l'ingénierie**
+*Développé avec ❤️ par l'équipe NYX*
