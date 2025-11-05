@@ -175,12 +175,28 @@ class MathematicsModule(BaseModule):
 
     def _solve_equation(self, query: str, context: Optional[Dict] = None) -> Dict[str, Any]:
         """Résout des équations algébriques"""
-        # Extraire l'équation
-        equation_match = re.search(r'[^:]+$', query)
-        if equation_match:
-            equation_str = equation_match.group(0).strip()
-        else:
-            equation_str = query
+        # Extraire l'équation en retirant les mots-clés courants
+        equation_str = query
+
+        # Retirer les mots-clés français et anglais
+        keywords_to_remove = [
+            r'résoudre\s+', r'solve\s+', r'résous\s+',
+            r'équation\s*:?\s*', r'equation\s*:?\s*',
+            r'calculer\s+', r'calculate\s+', r'compute\s+',
+            r"l'équation\s+", r'the\s+equation\s+'
+        ]
+
+        for keyword in keywords_to_remove:
+            equation_str = re.sub(keyword, '', equation_str, flags=re.IGNORECASE)
+
+        equation_str = equation_str.strip()
+
+        # Si la requête commence toujours par des mots, chercher l'équation avec '='
+        if '=' in equation_str:
+            # Extraire tout ce qui contient le signe '='
+            eq_match = re.search(r'([\w\s\+\-\*/\^\(\)\.]+\s*=\s*[\w\s\+\-\*/\^\(\)\.]+)', equation_str)
+            if eq_match:
+                equation_str = eq_match.group(1).strip()
 
         # Définir les symboles
         x, y, z, t = symbols('x y z t')
@@ -189,7 +205,7 @@ class MathematicsModule(BaseModule):
         try:
             # Parser l'équation
             if '=' in equation_str:
-                lhs, rhs = equation_str.split('=')
+                lhs, rhs = equation_str.split('=', 1)
                 equation = sp.sympify(lhs.strip()) - sp.sympify(rhs.strip())
             else:
                 equation = sp.sympify(equation_str)
@@ -200,24 +216,30 @@ class MathematicsModule(BaseModule):
             return {
                 "equation": str(equation),
                 "solutions": [str(sol) for sol in solutions] if isinstance(solutions, list) else str(solutions),
-                "symbolic_solutions": solutions,
                 "method": "symbolic"
             }
         except Exception as e:
-            return {"error": str(e), "equation": equation_str}
+            return {"error": str(e), "equation_input": equation_str}
 
     def _compute_derivative(self, query: str, context: Optional[Dict] = None) -> Dict[str, Any]:
         """Calcule des dérivées"""
         x = symbols('x')
 
-        # Extraire la fonction
-        func_match = re.search(r'of\s+(.+)|de\s+(.+)', query, re.IGNORECASE)
+        # Extraire la fonction - chercher après "of" ou "de"
+        func_match = re.search(r'(?:of|de)\s+(.+)', query, re.IGNORECASE)
         if func_match:
-            func_str = func_match.group(1) or func_match.group(2)
-            func_str = func_str.strip()
+            func_str = func_match.group(1).strip()
         else:
-            # Prendre tout après les mots-clés
-            func_str = query.split()[-1]
+            # Retirer les mots-clés courants
+            func_str = query
+            keywords = [
+                r'calculer\s+(?:la\s+)?dérivée\s+', r'calculate\s+(?:the\s+)?derivative\s+',
+                r'dérivée\s+', r'derivative\s+', r'dériver\s+', r'differentiate\s+',
+                r'd/dx\s+', r"d'?\s*"
+            ]
+            for kw in keywords:
+                func_str = re.sub(kw, '', func_str, flags=re.IGNORECASE)
+            func_str = func_str.strip()
 
         try:
             function = sp.sympify(func_str)
@@ -226,25 +248,36 @@ class MathematicsModule(BaseModule):
 
             return {
                 "function": str(function),
-                "derivative": str(derivative_simplified),
-                "symbolic": derivative_simplified
+                "derivative": str(derivative_simplified)
             }
         except Exception as e:
-            return {"error": str(e), "function": func_str}
+            return {"error": str(e), "function_input": func_str}
 
     def _compute_integral(self, query: str, context: Optional[Dict] = None) -> Dict[str, Any]:
         """Calcule des intégrales"""
         x = symbols('x')
 
-        # Extraire la fonction et les bornes
-        func_match = re.search(r'of\s+(.+)|de\s+(.+)', query, re.IGNORECASE)
+        # Extraire la fonction - chercher après "of" ou "de"
+        func_match = re.search(r'(?:of|de)\s+(.+?)(?:\s+from|\s+de\s+|$)', query, re.IGNORECASE)
         if func_match:
-            func_str = func_match.group(1) or func_match.group(2)
+            func_str = func_match.group(1).strip()
         else:
-            func_str = query.split()[-1]
+            # Retirer les mots-clés courants
+            func_str = query
+            keywords = [
+                r'calculer\s+(?:l\')?intégrale\s+', r'calculate\s+(?:the\s+)?integral\s+',
+                r'intégrale\s+', r'integral\s+', r'intégrer\s+', r'integrate\s+',
+                r'∫\s*'
+            ]
+            for kw in keywords:
+                func_str = re.sub(kw, '', func_str, flags=re.IGNORECASE)
 
-        # Chercher des bornes
-        bounds_match = re.search(r'from\s+(\S+)\s+to\s+(\S+)', query, re.IGNORECASE)
+            # Retirer les bornes si présentes
+            func_str = re.sub(r'\s+(?:from|de)\s+.+', '', func_str, flags=re.IGNORECASE)
+            func_str = func_str.strip()
+
+        # Chercher des bornes (from X to Y, de X à Y)
+        bounds_match = re.search(r'(?:from|de)\s+(\S+)\s+(?:to|à)\s+(\S+)', query, re.IGNORECASE)
 
         try:
             function = sp.sympify(func_str)
@@ -261,11 +294,10 @@ class MathematicsModule(BaseModule):
             return {
                 "function": str(function),
                 "integral": str(integral_result),
-                "type": integral_type,
-                "symbolic": integral_result
+                "type": integral_type
             }
         except Exception as e:
-            return {"error": str(e), "function": func_str}
+            return {"error": str(e), "function_input": func_str}
 
     def _solve_differential_equation(self, query: str, context: Optional[Dict] = None) -> Dict[str, Any]:
         """Résout des équations différentielles"""
