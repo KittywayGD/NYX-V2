@@ -6,6 +6,28 @@ Toutes les modifications importantes de NYX-V2 sont documentées ici.
 
 ### 🔧 Corrections Critiques
 
+#### [df8ffef] - 2025-01-XX
+**fix: Add implicit multiplication and complete mathematical accuracy fixes**
+- Ajout de la multiplication implicite: 2x → 2*x, 3xy → 3*x*y
+- Conversion unicode dans dérivées et intégrales (x² → x**2)
+- Reconnaissance de 'e' comme constante d'Euler dans les bornes
+- Simplification de l'affichage des intégrales définies
+- **Impact:** Tous les calculs mathématiques retournent maintenant des résultats corrects
+- **Tests:**
+  - ✅ résoudre 2x - 4 = 0 → ['2']
+  - ✅ x² - 4 = 0 → ['-2', '2'] (était ['4'])
+  - ✅ dérivée de x² → 2*x (était 0)
+  - ✅ Intégrale de x² → x**3/3 (était x*x²)
+  - ✅ intégrale de 1/x de 1 à e → 1 (était log(e))
+
+#### [583e765] - 2025-01-XX
+**fix: Correct mathematical computation errors**
+- Correction de la conversion unicode des exposants (x² → x**2)
+- Résolution explicite pour la variable x dans solve()
+- Utilisation de expand() au lieu de simplify() pour les dérivées
+- Évaluation numérique automatique des intégrales définies
+- **Impact:** Correction des calculs qui retournaient des résultats incorrects
+
 #### [0c83998] - 2025-01-XX
 **fix: Improve mathematical expression extraction from queries**
 - Résout le problème de parsing des requêtes en langage naturel
@@ -75,11 +97,13 @@ Toutes les modifications importantes de NYX-V2 sont documentées ici.
 1. Module detection fix (8875def) - **OBLIGATOIRE**
 2. JSON serialization fix (331c44d) - **OBLIGATOIRE**
 3. Expression extraction fix (0c83998) - **OBLIGATOIRE**
+4. Mathematical accuracy fix (583e765) - **OBLIGATOIRE**
+5. Implicit multiplication fix (df8ffef) - **OBLIGATOIRE**
 
 **Commits Actuels sur la Branche:**
-- Total: 10 commits
+- Total: 14 commits
 - Feature branch: `claude/modular-recursive-jarvis-011CUoNHqjSXuL2Dt9KByZ7g`
-- ⚠️ Les 3 derniers commits (8875def, 331c44d, 0c83998) ne sont **PAS ENCORE** dans `main`
+- ⚠️ Les 5 derniers commits ne sont **PAS ENCORE** dans `main`
 
 ---
 
@@ -88,8 +112,10 @@ Toutes les modifications importantes de NYX-V2 sont documentées ici.
 Pour que NYX-V2 fonctionne correctement en production, les commits suivants **DOIVENT** être mergés dans `main`:
 
 1. `8875def` - Module detection (CRITIQUE)
-2. `331c44d` - JSON serialization
-3. `0c83998` - Expression extraction
-4. `e34bc7d` - Documentation et tests
+2. `331c44d` - JSON serialization (CRITIQUE)
+3. `0c83998` - Expression extraction (CRITIQUE)
+4. `583e765` - Mathematical accuracy (CRITIQUE)
+5. `df8ffef` - Implicit multiplication (CRITIQUE)
+6. `e34bc7d` - Documentation et tests
 
 **Action requise:** Créer une Pull Request ou merger manuellement ces commits dans `main`.
