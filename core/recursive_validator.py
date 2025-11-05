@@ -1,5 +1,5 @@
 """
-Validateur récursif pour Jarvis
+Validateur récursif pour Nyx
 Vérifie et corrige automatiquement les résultats
 """
 

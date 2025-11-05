@@ -1,5 +1,5 @@
 """
-Gestionnaire de modules pour Jarvis
+Gestionnaire de modules pour Nyx
 Gère le chargement, l'activation et l'exécution des modules
 """
 
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 class ModuleManager:
-    """Gestionnaire central pour tous les modules Jarvis"""
+    """Gestionnaire central pour tous les modules Nyx"""
 
     def __init__(self):
         """Initialise le gestionnaire de modules"""

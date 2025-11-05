@@ -1,5 +1,5 @@
 """
-Module d'électronique pour Jarvis
+Module d'électronique pour Nyx
 Circuits, composants, analyse de signaux, filtres, etc.
 """
 

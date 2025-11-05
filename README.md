@@ -1,4 +1,4 @@
-# NYX-V2 JARVIS
+# NYX-V2
 
 ## Assistant Scientifique Modulaire et Récursif
 
@@ -10,7 +10,7 @@
 
 ## 📋 Description
 
-NYX-V2 Jarvis est un assistant scientifique avancé inspiré de J.A.R.V.I.S. (Just A Rather Very Intelligent System). Il est conçu pour résoudre des problèmes complexes en mathématiques, physique et électronique grâce à :
+NYX-V2 est un assistant scientifique avancé inspiré de J.A.R.V.I.S. (Just A Rather Very Intelligent System). Il est conçu pour résoudre des problèmes complexes en mathématiques, physique et électronique grâce à :
 
 - **Architecture modulaire** : Modules indépendants et extensibles
 - **Validation récursive** : Vérification automatique et correction des erreurs
@@ -86,23 +86,23 @@ python main.py
 ### Utilisation en Python
 
 ```python
-from core import Jarvis
+from core import Nyx
 
-# Initialiser Jarvis
-jarvis = Jarvis()
+# Initialiser Nyx
+nyx = Nyx()
 
 # Poser une question
-response = jarvis.ask("Résoudre x² - 4 = 0")
+response = nyx.ask("Résoudre x² - 4 = 0")
 print(response)
 
 # Résoudre un problème avec paramètres
-response = jarvis.ask(
+response = nyx.ask(
     "Calculer l'énergie d'un photon",
     context={"frequency": 5e14}
 )
 
 # Résoudre un problème complexe
-response = jarvis.solve(
+response = nyx.solve(
     "Circuit RC",
     parameters={"resistance": 1000, "capacitance": 1e-6}
 )
@@ -120,15 +120,15 @@ from core import Jarvis
 jarvis = Jarvis()
 
 # Résoudre une équation
-response = jarvis.ask("Résoudre 2x + 5 = 13")
+response = nyx.ask("Résoudre 2x + 5 = 13")
 # Résultat: x = 4
 
 # Calculer une dérivée
-response = jarvis.ask("Dérivée de sin(x) * exp(x)")
+response = nyx.ask("Dérivée de sin(x) * exp(x)")
 # Résultat: exp(x)*sin(x) + exp(x)*cos(x)
 
 # Calculer une intégrale
-response = jarvis.ask("Intégrale de x² de 0 à 2")
+response = nyx.ask("Intégrale de x² de 0 à 2")
 # Résultat: 8/3
 ```
 
@@ -136,21 +136,21 @@ response = jarvis.ask("Intégrale de x² de 0 à 2")
 
 ```python
 # Calculer l'énergie d'un photon (lumière verte)
-response = jarvis.ask(
+response = nyx.ask(
     "Énergie d'un photon",
     context={"frequency": 5.5e14}  # Hz
 )
 # E = h·ν ≈ 3.64 × 10⁻¹⁹ J
 
 # Calculer E=mc²
-response = jarvis.ask(
+response = nyx.ask(
     "mass-energy equivalence",
     context={"mass": 0.001}  # 1 gramme
 )
 # E = 9 × 10¹³ J (90 térajoules!)
 
 # Principe d'incertitude de Heisenberg
-response = jarvis.ask("Principe d'incertitude de Heisenberg")
+response = nyx.ask("Principe d'incertitude de Heisenberg")
 # Δx·Δp ≥ ℏ/2
 ```
 
@@ -158,21 +158,21 @@ response = jarvis.ask("Principe d'incertitude de Heisenberg")
 
 ```python
 # Loi d'Ohm
-response = jarvis.ask(
+response = nyx.ask(
     "Calculer le courant",
     context={"voltage": 12, "resistance": 100}
 )
 # I = 0.12 A (120 mA)
 
 # Circuit RC
-response = jarvis.ask(
+response = nyx.ask(
     "Circuit RC",
     context={"resistance": 10000, "capacitance": 100e-9}
 )
 # τ = 1 ms, f_c = 159 Hz
 
 # Diviseur de tension
-response = jarvis.ask(
+response = nyx.ask(
     "Diviseur de tension",
     context={"R1": 1000, "R2": 2000, "V_in": 12}
 )
@@ -183,7 +183,7 @@ response = jarvis.ask(
 
 ```python
 # Avec validation activée (par défaut)
-response = jarvis.ask("Résoudre x³ - 8 = 0", validate=True)
+response = nyx.ask("Résoudre x³ - 8 = 0", validate=True)
 
 print(response["validation"])
 # {
@@ -202,7 +202,7 @@ print(response["validation"])
 NYX-V2/
 ├── core/
 │   ├── __init__.py
-│   ├── jarvis.py              # Système principal
+│   ├── nyx.py                 # Système principal
 │   ├── module_manager.py      # Gestionnaire de modules
 │   └── recursive_validator.py # Validation récursive
 │
@@ -268,10 +268,10 @@ Le fichier `config/modules.json` permet de configurer :
 
 ## 📊 API Reference
 
-### Classe Jarvis
+### Classe Nyx
 
-#### `jarvis.ask(query, context=None, validate=True, module=None)`
-Pose une question à Jarvis.
+#### `nyx.ask(query, context=None, validate=True, module=None)`
+Pose une question à Nyx.
 
 **Paramètres:**
 - `query` (str): La question ou requête
@@ -281,16 +281,16 @@ Pose une question à Jarvis.
 
 **Retour:** Dictionnaire avec les résultats
 
-#### `jarvis.solve(problem, parameters=None, validate=True)`
+#### `nyx.solve(problem, parameters=None, validate=True)`
 Résout un problème scientifique complexe.
 
-#### `jarvis.get_status()`
+#### `nyx.get_status()`
 Retourne le statut du système.
 
-#### `jarvis.list_modules()`
+#### `nyx.list_modules()`
 Liste tous les modules disponibles.
 
-#### `jarvis.get_capabilities()`
+#### `nyx.get_capabilities()`
 Retourne toutes les capacités disponibles.
 
 ---
@@ -383,10 +383,10 @@ Pour toute question ou suggestion :
 
 ## 🎯 Citation
 
-Si vous utilisez NYX-V2 Jarvis dans vos travaux, merci de citer :
+Si vous utilisez NYX-V2 dans vos travaux, merci de citer :
 
 ```
-NYX-V2 Jarvis - Assistant Scientifique Modulaire et Récursif
+NYX-V2 - Assistant Scientifique Modulaire et Récursif
 Version 1.0.0
 https://github.com/KittywayGD/NYX-V2
 ```

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-NYX-V2 Jarvis - Point d'entrée principal
+NYX-V2 - Point d'entrée principal
 Assistant scientifique modulaire et récursif
 """
 
@@ -11,7 +11,7 @@ from pathlib import Path
 # Ajouter le répertoire courant au path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from core import Jarvis
+from core import Nyx
 
 
 def print_banner():
@@ -19,7 +19,7 @@ def print_banner():
     banner = """
     ╔═══════════════════════════════════════════════════════════╗
     ║                                                           ║
-    ║              NYX-V2 JARVIS v1.0.0                        ║
+    ║              NYX-V2 v1.0.0                               ║
     ║     Assistant Scientifique Modulaire et Récursif         ║
     ║                                                           ║
     ║  Mathématiques Avancées | Physique Extrême | Électronique║
@@ -63,7 +63,7 @@ def print_result(response: dict):
     print("="*60 + "\n")
 
 
-def demo_mathematics(jarvis: Jarvis):
+def demo_mathematics(nyx: Nyx):
     """Démonstration du module mathématiques"""
     print("\n" + "="*60)
     print("DÉMONSTRATION: Module Mathématiques")
@@ -86,12 +86,12 @@ def demo_mathematics(jarvis: Jarvis):
 
     for example in examples:
         print(f"📝 Question: {example['query']}")
-        response = jarvis.ask(example["query"], example["context"])
+        response = nyx.ask(example["query"], example["context"])
         print_result(response)
         input("Appuyez sur Entrée pour continuer...")
 
 
-def demo_physics(jarvis: Jarvis):
+def demo_physics(nyx: Nyx):
     """Démonstration du module physique"""
     print("\n" + "="*60)
     print("DÉMONSTRATION: Module Physique")
@@ -116,12 +116,12 @@ def demo_physics(jarvis: Jarvis):
         print(f"📝 Question: {example['query']}")
         if example["context"]:
             print(f"   Paramètres: {example['context']}")
-        response = jarvis.ask(example["query"], example["context"])
+        response = nyx.ask(example["query"], example["context"])
         print_result(response)
         input("Appuyez sur Entrée pour continuer...")
 
 
-def demo_electronics(jarvis: Jarvis):
+def demo_electronics(nyx: Nyx):
     """Démonstration du module électronique"""
     print("\n" + "="*60)
     print("DÉMONSTRATION: Module Électronique")
@@ -146,12 +146,12 @@ def demo_electronics(jarvis: Jarvis):
         print(f"📝 Question: {example['query']}")
         if example["context"]:
             print(f"   Paramètres: {example['context']}")
-        response = jarvis.ask(example["query"], example["context"])
+        response = nyx.ask(example["query"], example["context"])
         print_result(response)
         input("Appuyez sur Entrée pour continuer...")
 
 
-def interactive_mode(jarvis: Jarvis):
+def interactive_mode(nyx: Nyx):
     """Mode interactif"""
     print("\n" + "="*60)
     print("MODE INTERACTIF")
@@ -167,7 +167,7 @@ def interactive_mode(jarvis: Jarvis):
 
     while True:
         try:
-            query = input("Jarvis> ").strip()
+            query = input("Nyx> ").strip()
 
             if not query:
                 continue
@@ -177,27 +177,27 @@ def interactive_mode(jarvis: Jarvis):
                 print("Au revoir!")
                 break
             elif query == "/status":
-                status = jarvis.get_status()
+                status = nyx.get_status()
                 print(json.dumps(status, indent=2, ensure_ascii=False))
                 continue
             elif query == "/modules":
-                modules = jarvis.list_modules()
+                modules = nyx.list_modules()
                 for name, info in modules.items():
                     print(f"\n{name} v{info['version']}")
                     print(f"  Capacités: {', '.join(info['capabilities'][:5])}...")
                 continue
             elif query == "/history":
-                history = jarvis.get_history(limit=5)
+                history = nyx.get_history(limit=5)
                 for i, entry in enumerate(history, 1):
                     print(f"\n{i}. {entry['query']}")
                     print(f"   Succès: {entry['success']}")
                 continue
             elif query == "/help":
-                print(jarvis.help())
+                print(nyx.help())
                 continue
 
             # Requête normale
-            response = jarvis.ask(query, validate=True)
+            response = nyx.ask(query, validate=True)
             print_result(response)
 
         except KeyboardInterrupt:
@@ -210,15 +210,15 @@ def main():
     """Fonction principale"""
     print_banner()
 
-    # Initialiser Jarvis
-    print("🚀 Initialisation de Jarvis...\n")
-    jarvis = Jarvis()
+    # Initialiser Nyx
+    print("🚀 Initialisation de Nyx...\n")
+    nyx = Nyx()
 
     # Afficher le statut
-    status = jarvis.get_status()
-    print(f"✓ Jarvis initialisé")
+    status = nyx.get_status()
+    print(f"✓ Nyx initialisé")
     print(f"✓ {status['modules']['total_modules']} modules chargés")
-    print(f"✓ {len(jarvis.get_capabilities())} capacités disponibles\n")
+    print(f"✓ {len(nyx.get_capabilities())} capacités disponibles\n")
 
     # Menu principal
     while True:
@@ -237,22 +237,22 @@ def main():
         choice = input("\nChoisissez une option (1-7): ").strip()
 
         if choice == "1":
-            demo_mathematics(jarvis)
+            demo_mathematics(nyx)
         elif choice == "2":
-            demo_physics(jarvis)
+            demo_physics(nyx)
         elif choice == "3":
-            demo_electronics(jarvis)
+            demo_electronics(nyx)
         elif choice == "4":
-            interactive_mode(jarvis)
+            interactive_mode(nyx)
         elif choice == "5":
             print("\n🧪 Test rapide...")
-            response = jarvis.ask("Résoudre 2x + 5 = 13")
+            response = nyx.ask("Résoudre 2x + 5 = 13")
             print_result(response)
         elif choice == "6":
-            status = jarvis.get_status()
+            status = nyx.get_status()
             print("\n" + json.dumps(status, indent=2, ensure_ascii=False))
         elif choice == "7":
-            jarvis.shutdown()
+            nyx.shutdown()
             print("\n👋 Au revoir!")
             break
         else:
@@ -263,7 +263,7 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\n\n👋 Arrêt de Jarvis...")
+        print("\n\n👋 Arrêt de Nyx...")
         sys.exit(0)
     except Exception as e:
         print(f"\n❌ Erreur fatale: {e}")

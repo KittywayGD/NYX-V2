@@ -1,5 +1,5 @@
 """
-NYX-V2 Jarvis - Système principal
+NYX-V2 - Système principal
 Assistant scientifique modulaire et récursif
 """
 
@@ -20,20 +20,20 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class Jarvis:
+class Nyx:
     """
-    Système Jarvis - Assistant scientifique modulaire et récursif
+    Système Nyx - Assistant scientifique modulaire et récursif
     """
 
     def __init__(self, config_path: Optional[str] = None):
         """
-        Initialise le système Jarvis
+        Initialise le système Nyx
 
         Args:
             config_path: Chemin vers le fichier de configuration (optionnel)
         """
         logger.info("=" * 60)
-        logger.info("Initialisation de NYX-V2 Jarvis")
+        logger.info("Initialisation de NYX-V2")
         logger.info("=" * 60)
 
         # Composants principaux
@@ -90,7 +90,7 @@ class Jarvis:
         module: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Pose une question à Jarvis
+        Pose une question à Nyx
 
         Args:
             query: Question ou requête
@@ -104,7 +104,7 @@ class Jarvis:
         if not self.initialized:
             return {
                 "success": False,
-                "error": "Jarvis n'est pas initialisé"
+                "error": "Nyx n'est pas initialisé"
             }
 
         logger.info(f"\n{'='*60}")
@@ -213,10 +213,10 @@ class Jarvis:
         Retourne le statut complet du système
 
         Returns:
-            Statut de Jarvis et de tous les modules
+            Statut de Nyx et de tous les modules
         """
         status = {
-            "jarvis": {
+            "nyx": {
                 "initialized": self.initialized,
                 "version": "1.0.0",
                 "queries_processed": len(self.query_history)
@@ -298,14 +298,14 @@ class Jarvis:
         """
         if topic is None:
             return """
-NYX-V2 JARVIS - Assistant Scientifique Modulaire et Récursif
+NYX-V2 - Assistant Scientifique Modulaire et Récursif
 
 UTILISATION:
-    jarvis.ask(query, context=None, validate=True)
+    nyx.ask(query, context=None, validate=True)
         - Pose une question générale
         - validate: Active la vérification récursive des résultats
 
-    jarvis.solve(problem, parameters=None, validate=True)
+    nyx.solve(problem, parameters=None, validate=True)
         - Résout un problème scientifique complexe
         - parameters: Dictionnaire avec les valeurs numériques
 
@@ -316,16 +316,16 @@ MODULES DISPONIBLES:
     - ScientificSolver: Résolution unifiée multi-domaines
 
 COMMANDES SYSTÈME:
-    jarvis.get_status()      - Statut du système
-    jarvis.list_modules()    - Liste des modules
-    jarvis.get_capabilities() - Capacités disponibles
-    jarvis.get_history()     - Historique des requêtes
-    jarvis.help(topic)       - Aide (ce message)
+    nyx.get_status()      - Statut du système
+    nyx.list_modules()    - Liste des modules
+    nyx.get_capabilities() - Capacités disponibles
+    nyx.get_history()     - Historique des requêtes
+    nyx.help(topic)       - Aide (ce message)
 
 EXEMPLES:
-    jarvis.ask("Résoudre x² - 4 = 0")
-    jarvis.ask("Calculer l'énergie d'un photon", context={"frequency": 5e14})
-    jarvis.solve("Circuit RC", parameters={"resistance": 1000, "capacitance": 1e-6})
+    nyx.ask("Résoudre x² - 4 = 0")
+    nyx.ask("Calculer l'énergie d'un photon", context={"frequency": 5e14})
+    nyx.solve("Circuit RC", parameters={"resistance": 1000, "capacitance": 1e-6})
             """
         elif topic == "mathematics":
             return "Module Mathematics: équations, dérivées, intégrales, matrices, limites, séries..."
@@ -338,12 +338,12 @@ EXEMPLES:
 
     def shutdown(self):
         """Arrêt propre du système"""
-        logger.info("Arrêt de Jarvis...")
+        logger.info("Arrêt de Nyx...")
         self.initialized = False
-        logger.info("✓ Jarvis arrêté")
+        logger.info("✓ Nyx arrêté")
 
     def __repr__(self) -> str:
-        """Représentation string de Jarvis"""
+        """Représentation string de Nyx"""
         status = "✓ Actif" if self.initialized else "✗ Inactif"
         modules_count = len(self.module_manager.get_all_modules())
-        return f"<Jarvis {status} | {modules_count} modules | {len(self.query_history)} requêtes>"
+        return f"<Nyx {status} | {modules_count} modules | {len(self.query_history)} requêtes>"
