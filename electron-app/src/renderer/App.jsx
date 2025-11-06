@@ -9,12 +9,12 @@ const SandboxPanel = lazy(() => import('./components/SandboxPanel'));
 const Sidebar = lazy(() => import('./components/Sidebar'));
 const StatusBar = lazy(() => import('./components/StatusBar'));
 
-// Loading fallback component
+// Loading fallback component - Cyberpunk style
 const LoadingFallback = ({ message = 'Chargement...' }) => (
   <div className="flex items-center justify-center h-full">
     <div className="text-center">
-      <Activity className="w-8 h-8 text-nyx-accent animate-spin mx-auto mb-2" />
-      <p className="text-gray-400 text-sm">{message}</p>
+      <Activity className="w-8 h-8 text-cyber-cyan animate-spin mx-auto mb-2" style={{ filter: 'drop-shadow(0 0 8px rgba(6, 182, 212, 0.8))' }} />
+      <p className="text-cyber-cyan text-sm font-display uppercase tracking-wider">{message}</p>
     </div>
   </div>
 );
@@ -33,10 +33,21 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-nyx-darker flex items-center justify-center">
-        <div className="text-center">
-          <Activity className="w-12 h-12 text-nyx-accent animate-spin mx-auto mb-4" />
-          <p className="text-gray-400">Initialisation de NYX-V2...</p>
+      <div className="min-h-screen bg-cyber-darker cyber-bg flex items-center justify-center scan-effect">
+        <div className="text-center space-y-6">
+          <div className="relative">
+            <Activity className="w-16 h-16 text-cyber-cyan animate-spin mx-auto" style={{ filter: 'drop-shadow(0 0 12px rgba(6, 182, 212, 0.8))' }} />
+            <div className="absolute inset-0 bg-cyber-cyan rounded-full blur-xl opacity-20 animate-pulse"></div>
+          </div>
+          <div>
+            <h1 className="text-4xl font-display font-bold holographic mb-2">NYX-V2</h1>
+            <p className="text-cyber-cyan text-sm uppercase tracking-widest animate-pulse">INITIALISATION DU SYSTÈME...</p>
+          </div>
+          <div className="flex gap-2 justify-center">
+            <div className="w-2 h-2 bg-cyber-cyan rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+            <div className="w-2 h-2 bg-cyber-cyan rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+            <div className="w-2 h-2 bg-cyber-cyan rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+          </div>
         </div>
       </div>
     );
@@ -44,7 +55,7 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <div className="flex h-screen bg-nyx-darker text-white overflow-hidden">
+      <div className="flex h-screen bg-cyber-darker cyber-bg text-white overflow-hidden scan-effect">
         {/* Sidebar */}
         <Suspense fallback={<LoadingFallback message="Chargement sidebar..." />}>
           <Sidebar />
@@ -67,7 +78,7 @@ function App() {
 
         {/* Sandbox Panel */}
         {sandboxVisible && (
-          <div className="w-1/2 border-l border-gray-700">
+          <div className="w-1/2 border-l border-cyber-cyan border-opacity-30 slide-in-right">
             <Suspense fallback={<LoadingFallback message="Chargement sandbox..." />}>
               <SandboxPanel />
             </Suspense>
@@ -76,9 +87,9 @@ function App() {
 
         {/* Connection Status Indicator */}
         {!isConnected && (
-          <div className="fixed top-4 right-4 glass px-4 py-2 rounded-lg text-nyx-warning flex items-center gap-2">
-            <div className="w-2 h-2 bg-nyx-warning rounded-full animate-pulse"></div>
-            <span>Connexion API perdue</span>
+          <div className="fixed top-4 right-4 cyber-glass px-4 py-2 rounded-lg text-cyber-warning flex items-center gap-2 shadow-neon-cyan animate-pulse">
+            <div className="w-2 h-2 bg-cyber-warning rounded-full animate-pulse"></div>
+            <span className="font-display uppercase text-sm tracking-wide">Connexion API perdue</span>
           </div>
         )}
       </div>
