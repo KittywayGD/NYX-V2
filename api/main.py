@@ -3,13 +3,20 @@ FastAPI Backend pour NYX-V2
 API REST pour l'interface Electron
 """
 
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Request
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi.middleware.gzip import GZipMiddleware
+from pydantic import BaseModel, validator
 from typing import Dict, Any, List, Optional
+from functools import lru_cache
 import logging
 import sys
+import os
+import re
 from pathlib import Path
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 # Ajouter le répertoire parent au path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -25,6 +32,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Configure rate limiter
+limiter = Limiter(key_func=get_remote_address, default_limits=["200/minute"])
+
 # Créer l'application FastAPI
 app = FastAPI(
     title="NYX-V2 API",
@@ -32,13 +42,34 @@ app = FastAPI(
     version="2.0.0"
 )
 
-# Configuration CORS pour Electron
+# Add rate limiter
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# Add GZip compression middleware (compress responses > 1KB)
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+# Configuration CORS sécurisée pour Electron et développement
+# Origines autorisées selon l'environnement
+ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Dev frontend
+    "http://localhost:5173",  # Vite dev server
+]
+
+# En production, ajouter les origines Electron
+if os.getenv("NODE_ENV") == "production":
+    ALLOWED_ORIGINS.extend([
+        "app://*",  # Electron production
+        "file://*"  # Electron local files
+    ])
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # En production, spécifier les origines exactes
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["Content-Type", "Authorization"],
+    max_age=3600,  # Cache preflight requests for 1 hour
 )
 
 # Instances globales
@@ -50,12 +81,77 @@ physics_sandbox = None
 electronics_sandbox = None
 
 
+# Cached intent detection (LRU cache for performance)
+@lru_cache(maxsize=128)
+def _cached_intent_detect(query: str) -> str:
+    """
+    Cached wrapper for intent detection.
+    Returns JSON string representation of intent.
+    """
+    if not intent_detector:
+        return "{}"
+
+    try:
+        intent = intent_detector.detect(query, None)
+        return {
+            "category": intent.category.value if hasattr(intent.category, 'value') else str(intent.category),
+            "domain": intent.domain.value if hasattr(intent.domain, 'value') else str(intent.domain),
+            "action": intent.action.value if hasattr(intent.action, 'value') else str(intent.action),
+            "confidence": intent.confidence,
+            "requires_sandbox": intent.requires_sandbox,
+            "parameters": intent.parameters,
+        }
+    except Exception as e:
+        logger.warning(f"Intent detection failed: {e}")
+        return {}
+
+
+# Helpers pour validation
+def sanitize_math_expression(expr: str) -> str:
+    """Sanitize mathematical expressions to prevent code injection."""
+    # Blocked dangerous patterns
+    dangerous_patterns = [
+        r'__import__',
+        r'eval\s*\(',
+        r'exec\s*\(',
+        r'compile\s*\(',
+        r'open\s*\(',
+        r'file\s*\(',
+        r'input\s*\(',
+        r'os\.',
+        r'sys\.',
+        r'subprocess',
+        r'__\w+__',  # Dunder methods
+    ]
+
+    for pattern in dangerous_patterns:
+        if re.search(pattern, expr, re.IGNORECASE):
+            raise ValueError(f"Expression contains forbidden pattern: {pattern}")
+
+    return expr.strip()
+
+
+def validate_numeric_bounds(value: float, min_val: float = -1e6, max_val: float = 1e6) -> float:
+    """Validate numeric values are within reasonable bounds."""
+    if not (min_val <= value <= max_val):
+        raise ValueError(f"Value {value} outside allowed range [{min_val}, {max_val}]")
+    return value
+
+
 # Models Pydantic pour validation
 class QueryRequest(BaseModel):
     query: str
     context: Optional[Dict[str, Any]] = None
     validate: bool = True
     module: Optional[str] = None
+
+    @validator('query')
+    def validate_query(cls, v):
+        if not v or not v.strip():
+            raise ValueError("Query cannot be empty")
+        if len(v) > 10000:
+            raise ValueError("Query too long (max 10000 characters)")
+        return v.strip()
 
 
 class IntentRequest(BaseModel):
@@ -75,6 +171,24 @@ class PlotRequest(BaseModel):
     x_max: Optional[float] = 10
     plot_type: Optional[str] = "2d"  # "2d", "3d", "parametric", "polar"
     parameters: Optional[Dict[str, Any]] = {}
+
+    @validator('function')
+    def validate_function(cls, v):
+        if not v or not v.strip():
+            raise ValueError("Function cannot be empty")
+        # Sanitize to prevent code injection
+        return sanitize_math_expression(v)
+
+    @validator('x_min', 'x_max')
+    def validate_bounds(cls, v):
+        return validate_numeric_bounds(v, -1e6, 1e6)
+
+    @validator('plot_type')
+    def validate_plot_type(cls, v):
+        allowed_types = ["2d", "3d", "parametric", "polar", "vector_field", "function_2d", "function_3d"]
+        if v.lower() not in allowed_types:
+            raise ValueError(f"Invalid plot type. Must be one of: {allowed_types}")
+        return v.lower()
 
 
 class PhysicsSimRequest(BaseModel):

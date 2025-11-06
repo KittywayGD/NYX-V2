@@ -3,12 +3,26 @@
  */
 
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-const useNyxStore = create((set, get) => ({
-  // Chat state
-  messages: [],
-  currentQuery: '',
-  isProcessing: false,
+// Generate unique IDs for messages
+let messageIdCounter = 0;
+const generateMessageId = () => {
+  return `msg_${Date.now()}_${++messageIdCounter}`;
+};
+
+// Constants
+const MAX_MESSAGES = 1000; // Maximum messages to keep in memory
+const MAX_VISIBLE_MESSAGES = 100; // Messages to show at once
+
+const useNyxStore = create(
+  persist(
+    (set, get) => ({
+      // Chat state
+      messages: [],
+      currentQuery: '',
+      isProcessing: false,
+      messageOffset: 0, // For pagination
 
   // Sandbox state
   activeSandbox: null, // 'math' | 'physics' | 'electronics' | null
@@ -28,15 +42,40 @@ const useNyxStore = create((set, get) => ({
   },
 
   // Actions - Chat
-  addMessage: (message) => set((state) => ({
-    messages: [...state.messages, {
+  addMessage: (message) => set((state) => {
+    const newMessage = {
       ...message,
-      id: Date.now() + Math.random(),
+      id: generateMessageId(),
       timestamp: new Date().toISOString(),
-    }]
+    };
+
+    // Keep only last MAX_MESSAGES messages
+    const updatedMessages = [...state.messages, newMessage];
+    if (updatedMessages.length > MAX_MESSAGES) {
+      return { messages: updatedMessages.slice(-MAX_MESSAGES) };
+    }
+
+    return { messages: updatedMessages };
+  }),
+
+  clearMessages: () => set({ messages: [], messageOffset: 0 }),
+
+  // Pagination
+  getVisibleMessages: () => {
+    const { messages, messageOffset } = get();
+    const start = Math.max(0, messages.length - MAX_VISIBLE_MESSAGES - messageOffset);
+    const end = messages.length - messageOffset;
+    return messages.slice(start, end);
+  },
+
+  loadMoreMessages: () => set((state) => ({
+    messageOffset: Math.min(
+      state.messageOffset + 50,
+      Math.max(0, state.messages.length - MAX_VISIBLE_MESSAGES)
+    ),
   })),
 
-  clearMessages: () => set({ messages: [] }),
+  resetMessageOffset: () => set({ messageOffset: 0 }),
 
   setCurrentQuery: (query) => set({ currentQuery: query }),
 
@@ -123,7 +162,10 @@ const useNyxStore = create((set, get) => ({
         });
       }
     } catch (error) {
-      console.error('Error querying NYX:', error);
+      // Log error via IPC instead of console
+      if (window.nyxAPI?.error) {
+        window.nyxAPI.error('Error querying NYX:', error);
+      }
       addMessage({
         role: 'error',
         content: error.message || 'Erreur de connexion',
@@ -158,10 +200,23 @@ const useNyxStore = create((set, get) => ({
       });
 
     } catch (error) {
-      console.error('Error initializing NYX:', error);
+      // Log error via IPC instead of console
+      if (window.nyxAPI?.error) {
+        window.nyxAPI.error('Error initializing NYX:', error);
+      }
       set({ isConnected: false });
     }
   },
-}));
+    }),
+    {
+      name: 'nyx-storage', // Persist key
+      partialize: (state) => ({
+        // Only persist settings and recent messages
+        settings: state.settings,
+        messages: state.messages.slice(-50), // Keep last 50 messages
+      }),
+    }
+  )
+);
 
 export default useNyxStore;
