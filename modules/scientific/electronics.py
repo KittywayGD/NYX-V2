@@ -49,18 +49,44 @@ class ElectronicsModule(BaseModule):
 
         # Mots-clés français et anglais pour l'électronique
         electronics_keywords = {
-            'circuit': 0.9, 'résistance': 0.9, 'resistance': 0.9,
-            'voltage': 0.9, 'tension': 0.9, 'volt': 0.9,
-            'courant': 0.9, 'current': 0.9, 'ampere': 0.9, 'ampère': 0.9,
-            'ohm': 0.9, 'condensateur': 0.9, 'capacitor': 0.9, 'capacitance': 0.9,
-            'inducteur': 0.9, 'inductor': 0.9, 'inductance': 0.9,
-            'transistor': 0.95, 'diode': 0.95,
-            'amplificateur': 0.9, 'amplifier': 0.9, 'op-amp': 0.95,
+            # Termes généraux
+            'électronique': 0.95, 'electronic': 0.95, 'électrique': 0.9, 'electric': 0.9,
+
+            # Circuits - IMPORTANT pour "Circuit RC"
+            'circuit': 0.95, 'schéma': 0.85, 'schema': 0.85,
+            'analyser': 0.7, 'analyze': 0.7, 'simuler': 0.8, 'simulate': 0.8,
+
+            # Composants passifs
+            'résistance': 0.9, 'resistance': 0.9, 'resistor': 0.9, 'résistor': 0.9,
+            'condensateur': 0.9, 'capacitor': 0.9, 'capacitance': 0.9, 'capacité': 0.85,
+            'inducteur': 0.9, 'inductor': 0.9, 'inductance': 0.9, 'bobine': 0.85,
+
+            # Grandeurs électriques
+            'voltage': 0.9, 'tension': 0.9, 'volt': 0.9, 'v': 0.5,
+            'courant': 0.9, 'current': 0.9, 'ampere': 0.9, 'ampère': 0.9, 'a': 0.5,
+            'ohm': 0.9, 'ω': 0.85, 'ohms': 0.9,
+            'puissance': 0.8, 'power': 0.8, 'watt': 0.85, 'w': 0.5,
+
+            # Composants actifs
+            'transistor': 0.95, 'bjt': 0.95, 'fet': 0.95, 'mosfet': 0.95,
+            'diode': 0.95, 'led': 0.9,
+            'amplificateur': 0.9, 'amplifier': 0.9, 'op-amp': 0.95, 'aop': 0.95,
+
+            # Filtres et fréquences
             'filtre': 0.9, 'filter': 0.9,
+            'fréquence': 0.8, 'frequency': 0.8, 'hz': 0.7, 'hertz': 0.8,
+            'bode': 0.95, 'nyquist': 0.95,
+
+            # Impédance et résonance
             'impédance': 0.9, 'impedance': 0.9,
-            'résonance': 0.9, 'resonance': 0.9,
-            'puissance': 0.7, 'power': 0.7, 'watt': 0.8,
-            'fréquence': 0.7, 'frequency': 0.7,
+            'résonance': 0.9, 'resonance': 0.9, 'résonant': 0.85,
+
+            # Analyse AC/DC
+            'alternatif': 0.8, 'ac': 0.7, 'continu': 0.7, 'dc': 0.7,
+            'sinusoïdal': 0.8, 'sinusoidal': 0.8,
+
+            # Logique digitale
+            'logique': 0.8, 'logic': 0.8, 'digital': 0.8, 'numérique': 0.8,
         }
 
         # Vérifier les mots-clés
@@ -68,11 +94,12 @@ class ElectronicsModule(BaseModule):
             if keyword in query_lower:
                 score = max(score, weight)
 
-        # Composants électroniques spécifiques
-        components = ['rc', 'rl', 'rlc', 'bjt', 'fet', 'mosfet']
+        # Composants électroniques spécifiques (notation abrégée)
+        components = ['rc', 'rl', 'rlc', 'bjt', 'fet', 'mosfet', 'cmos']
         for comp in components:
-            if comp in query_lower:
-                score = max(score, 0.9)
+            # Chercher le composant en tant que mot complet ou avec espace
+            if f' {comp} ' in f' {query_lower} ' or f'{comp},' in query_lower:
+                score = max(score, 0.95)
 
         return min(score, 1.0)
 
