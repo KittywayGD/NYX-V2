@@ -148,21 +148,27 @@ class ScientificSolver(BaseModule):
         math_keywords = [
             "solve", "résoudre", "équation", "equation", "dérivée", "derivative",
             "intégrale", "integral", "limite", "limit", "matrice", "matrix",
-            "série", "series", "optimize", "optimiser"
+            "série", "series", "optimize", "optimiser", "tracer", "plot",
+            "graphe", "graph", "courbe", "fonction", "function"
         ]
 
         # Mots-clés physiques
         physics_keywords = [
-            "force", "energy", "énergie", "momentum", "velocity", "vitesse",
-            "temperature", "température", "quantum", "quantique", "relativité",
-            "relativity", "photon", "electron", "mass", "masse", "gravity"
+            "physique", "physics", "force", "energy", "énergie", "momentum",
+            "velocity", "vitesse", "temperature", "température",
+            "quantum", "quantique", "relativité", "relativity",
+            "photon", "electron", "électron", "mass", "masse",
+            "gravity", "gravité", "pendule", "pendulum",
+            "simuler", "simulate", "simulation", "mouvement", "motion",
+            "projectile", "collision", "choc", "oscillation"
         ]
 
         # Mots-clés électroniques
         electronics_keywords = [
             "circuit", "resistance", "résistance", "voltage", "tension",
             "current", "courant", "capacitor", "condensateur", "inductor",
-            "transistor", "amplifier", "filter", "filtre", "impedance"
+            "transistor", "amplifier", "amplificateur", "filter", "filtre",
+            "impedance", "impédance", "électronique", "electronic", "rc", "rl", "rlc"
         ]
 
         # Vérifier chaque domaine

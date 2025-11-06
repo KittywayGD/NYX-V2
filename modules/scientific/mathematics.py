@@ -78,14 +78,42 @@ class MathematicsModule(BaseModule):
 
         # Mots-clés français et anglais
         math_keywords = {
+            # Termes généraux
+            'mathématique': 0.95, 'mathematics': 0.95, 'math': 0.9,
+
+            # Visualisation - IMPORTANT pour "Tracer x² - 4"
+            'tracer': 0.9, 'plot': 0.9, 'dessiner': 0.85, 'draw': 0.85,
+            'graphe': 0.9, 'graph': 0.9, 'courbe': 0.9, 'curve': 0.9,
+            'visualiser': 0.85, 'visualize': 0.85, 'afficher': 0.8, 'display': 0.8,
+            'fonction': 0.85, 'function': 0.85,
+
+            # Résolution
             'résoudre': 0.9, 'solve': 0.9, 'équation': 0.9, 'equation': 0.9,
-            'dérivée': 0.9, 'derivative': 0.9, 'dériver': 0.9,
-            'intégrale': 0.9, 'integral': 0.9, 'intégrer': 0.9,
+            'solution': 0.85, 'trouver': 0.7, 'find': 0.7,
+
+            # Calcul différentiel/intégral
+            'dérivée': 0.9, 'derivative': 0.9, 'dériver': 0.9, 'differentiate': 0.9,
+            'intégrale': 0.9, 'integral': 0.9, 'intégrer': 0.9, 'integrate': 0.9,
+            'd/dx': 0.95, '∫': 0.95,
+
+            # Limites et séries
             'limite': 0.9, 'limit': 0.9, 'lim': 0.9,
-            'matrice': 0.9, 'matrix': 0.9, 'déterminant': 0.8,
-            'série': 0.8, 'series': 0.8, 'taylor': 0.9,
+            'série': 0.8, 'series': 0.8, 'taylor': 0.9, 'fourier': 0.9,
+
+            # Algèbre linéaire
+            'matrice': 0.9, 'matrix': 0.9, 'déterminant': 0.8, 'determinant': 0.8,
+            'vecteur': 0.85, 'vector': 0.85, 'eigenvalue': 0.9, 'valeur propre': 0.9,
+
+            # Optimisation
             'optimiser': 0.8, 'optimize': 0.8, 'minimum': 0.7, 'maximum': 0.7,
-            'calculer': 0.5, 'calculate': 0.5, 'simplifier': 0.7,
+            'minimiser': 0.8, 'minimize': 0.8, 'maximiser': 0.8, 'maximize': 0.8,
+
+            # Calcul de base
+            'calculer': 0.6, 'calculate': 0.6, 'compute': 0.6,
+            'simplifier': 0.7, 'simplify': 0.7, 'développer': 0.7, 'expand': 0.7,
+
+            # Algèbre
+            'polynôme': 0.85, 'polynomial': 0.85, 'factoriser': 0.8, 'factor': 0.8,
         }
 
         # Vérifier les mots-clés

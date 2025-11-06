@@ -70,18 +70,48 @@ class PhysicsModule(BaseModule):
 
         # Mots-clés français et anglais pour la physique
         physics_keywords = {
+            # Termes généraux
+            'physique': 0.95, 'physics': 0.95,
             'énergie': 0.9, 'energy': 0.9, 'force': 0.9,
+
+            # Simulations et mouvements - IMPORTANT pour "Simuler un pendule"
+            'pendule': 0.95, 'pendulum': 0.95, 'balancier': 0.9,
+            'simuler': 0.8, 'simulate': 0.8, 'simulation': 0.85,
+            'mouvement': 0.85, 'motion': 0.85,
+            'projectile': 0.9, 'trajectoire': 0.85, 'trajectory': 0.85,
+            'collision': 0.9, 'choc': 0.85, 'impact': 0.8,
+            'oscillation': 0.85, 'vibration': 0.8,
+
+            # Particules
             'photon': 0.9, 'electron': 0.9, 'électron': 0.9,
-            'quantique': 0.9, 'quantum': 0.9, 'schrödinger': 0.95, 'heisenberg': 0.95,
+            'proton': 0.9, 'neutron': 0.9,
+
+            # Mécanique quantique
+            'quantique': 0.95, 'quantum': 0.95, 'schrödinger': 0.95, 'heisenberg': 0.95,
+
+            # Relativité
             'relativité': 0.9, 'relativity': 0.9, 'einstein': 0.9,
+
+            # Thermodynamique
             'température': 0.9, 'temperature': 0.9, 'chaleur': 0.8, 'heat': 0.8,
             'entropie': 0.9, 'entropy': 0.9, 'thermodynamique': 0.9,
+
+            # Électromagnétisme
             'électrique': 0.9, 'electric': 0.9, 'magnétique': 0.9, 'magnetic': 0.9,
             'coulomb': 0.9, 'ampère': 0.9, 'maxwell': 0.9,
+
+            # Cinématique/Dynamique
             'vitesse': 0.7, 'velocity': 0.7, 'accélération': 0.8, 'acceleration': 0.8,
             'masse': 0.7, 'mass': 0.7, 'momentum': 0.8,
+            'cinétique': 0.85, 'kinetic': 0.85,
+
+            # Ondes
             'onde': 0.8, 'wave': 0.8, 'fréquence': 0.8, 'frequency': 0.8,
+
+            # Nucléaire
             'nucléaire': 0.9, 'nuclear': 0.9, 'radioactif': 0.9,
+
+            # Gravitation
             'gravité': 0.8, 'gravity': 0.8, 'gravitationnel': 0.8,
         }
 
