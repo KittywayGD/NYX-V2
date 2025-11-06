@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import useNyxStore from '../store/nyxStore';
-import { Send, Loader2, Download, Trash2 } from 'lucide-react';
+import { Send, Loader2, Download, Trash2, Zap } from 'lucide-react';
 import { useKeyboardShortcuts } from '../utils/keyboardShortcuts';
 
 function ChatInterface() {
@@ -83,28 +83,28 @@ function ChatInterface() {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Header */}
-      <div className="glass px-6 py-4 border-b border-gray-700 flex items-center justify-between">
+      {/* Header - Cyberpunk Style */}
+      <div className="cyber-glass px-6 py-4 border-b border-cyber-cyan border-opacity-30 flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-nyx-accent">NYX-V2 Assistant</h2>
-          <p className="text-sm text-gray-400">Mathématiques • Physique • Électronique</p>
+          <h2 className="text-2xl font-display font-bold text-glow-cyan holographic">NYX-V2</h2>
+          <p className="text-sm text-cyber-cyan uppercase tracking-wider font-display">Math • Physique • Électronique</p>
         </div>
         <div className="flex gap-2">
           <button
             onClick={() => handleExportChat('json')}
-            className="p-2 hover:bg-gray-700 rounded transition-colors"
+            className="p-2 hover:bg-cyber-cyan hover:bg-opacity-10 rounded transition-all duration-300 text-cyber-cyan hover:shadow-neon-cyan group"
             title="Exporter le chat (Ctrl+Shift+E)"
             aria-label="Export chat"
           >
-            <Download className="w-5 h-5" />
+            <Download className="w-5 h-5 group-hover:animate-bounce" />
           </button>
           <button
             onClick={handleClearChat}
-            className="p-2 hover:bg-gray-700 rounded transition-colors text-red-400"
+            className="p-2 hover:bg-cyber-error hover:bg-opacity-10 rounded transition-all duration-300 text-cyber-error hover:shadow-neon-pink group"
             title="Effacer le chat (Ctrl+Shift+L)"
             aria-label="Clear chat"
           >
-            <Trash2 className="w-5 h-5" />
+            <Trash2 className="w-5 h-5 group-hover:animate-bounce" />
           </button>
         </div>
       </div>
@@ -115,51 +115,52 @@ function ChatInterface() {
           <MessageBubble key={message.id} message={message} />
         ))}
         {isProcessing && (
-          <div className="flex items-center gap-2 text-gray-400">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span>NYX réfléchit...</span>
+          <div className="flex items-center gap-3 text-cyber-cyan">
+            <Loader2 className="w-5 h-5 animate-spin" style={{ filter: 'drop-shadow(0 0 8px rgba(6, 182, 212, 0.8))' }} />
+            <span className="font-display uppercase text-sm tracking-wider animate-pulse">NYX calcule...</span>
+            <Zap className="w-4 h-4 animate-pulse" />
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
-      <div className="glass p-4 border-t border-gray-700">
+      {/* Input - Cyberpunk Style */}
+      <div className="cyber-glass p-4 border-t border-cyber-cyan border-opacity-30">
         <form onSubmit={handleSubmit} className="flex gap-3">
           <input
             ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Posez votre question scientifique... (Ctrl+Enter pour envoyer)"
-            className="flex-1 bg-nyx-dark border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:border-nyx-accent transition-colors"
+            placeholder="▸ ENTREZ VOTRE REQUÊTE SCIENTIFIQUE..."
+            className="flex-1 bg-cyber-navy bg-opacity-50 border border-cyber-cyan border-opacity-30 rounded-lg px-4 py-3 focus:outline-none focus:border-cyber-cyan focus:shadow-neon-cyan transition-all duration-300 font-display text-cyber-cyan placeholder-cyber-cyan placeholder-opacity-40"
             disabled={isProcessing}
             aria-label="Question scientifique"
           />
           <button
             type="submit"
             disabled={isProcessing || !input.trim()}
-            className="bg-nyx-accent hover:bg-nyx-accent-hover disabled:bg-gray-600 disabled:cursor-not-allowed px-6 py-2 rounded-lg transition-colors flex items-center gap-2"
+            className="cyber-button disabled:opacity-50 disabled:cursor-not-allowed px-6 py-3 rounded-lg transition-all duration-300 flex items-center gap-2 font-display"
           >
             {isProcessing ? (
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
               <Send className="w-5 h-5" />
             )}
-            <span className="hidden sm:inline">Envoyer</span>
+            <span className="hidden sm:inline font-semibold">ENVOYER</span>
           </button>
         </form>
 
-        {/* Quick Examples */}
+        {/* Quick Examples - Cyberpunk Style */}
         <div className="mt-3 flex flex-wrap gap-2">
           <QuickButton onClick={() => setInput('Tracer x² - 4')}>
-            Tracer x² - 4
+            <span className="text-cyber-purple mr-1">⚡</span> Tracer x² - 4
           </QuickButton>
           <QuickButton onClick={() => setInput('Simuler un pendule')}>
-            Simuler un pendule
+            <span className="text-cyber-cyan mr-1">⚙</span> Simuler un pendule
           </QuickButton>
           <QuickButton onClick={() => setInput('Circuit RC')}>
-            Circuit RC
+            <span className="text-cyber-pink mr-1">⚡</span> Circuit RC
           </QuickButton>
         </div>
       </div>
@@ -176,22 +177,22 @@ function MessageBubble({ message }) {
       <div
         className={`max-w-[80%] rounded-lg p-4 ${
           isUser
-            ? 'bg-nyx-accent text-white'
+            ? 'cyber-glass-pink text-white border-cyber-magenta border-opacity-50'
             : isError
-            ? 'bg-nyx-error bg-opacity-20 border border-nyx-error'
-            : 'glass'
+            ? 'cyber-glass bg-cyber-error bg-opacity-10 border border-cyber-error'
+            : 'cyber-glass'
         }`}
       >
-        {/* Intent badge */}
+        {/* Intent badge - Cyberpunk Style */}
         {message.intent && !isUser && (
-          <div className="mb-2 flex gap-2 text-xs">
-            <span className="px-2 py-1 bg-nyx-dark rounded">
+          <div className="mb-3 flex gap-2 text-xs">
+            <span className="px-3 py-1 bg-cyber-navy bg-opacity-50 border border-cyber-cyan border-opacity-30 rounded font-display text-cyber-cyan uppercase tracking-wide">
               {message.intent.domain}
             </span>
-            <span className="px-2 py-1 bg-nyx-dark rounded">
+            <span className="px-3 py-1 bg-cyber-navy bg-opacity-50 border border-cyber-purple border-opacity-30 rounded font-display text-cyber-purple uppercase tracking-wide">
               {message.intent.action}
             </span>
-            <span className="px-2 py-1 bg-nyx-dark rounded">
+            <span className="px-3 py-1 bg-cyber-navy bg-opacity-50 border border-cyber-success border-opacity-30 rounded font-display text-cyber-success uppercase tracking-wide">
               {Math.round(message.intent.confidence * 100)}%
             </span>
           </div>
@@ -199,27 +200,39 @@ function MessageBubble({ message }) {
 
         {/* Content */}
         {typeof message.content === 'string' ? (
-          <p className="whitespace-pre-wrap">{message.content}</p>
+          <p className="whitespace-pre-wrap text-gray-100 leading-relaxed">{message.content}</p>
         ) : message.content.type === 'welcome' ? (
           <div>
-            <p className="font-semibold mb-2">👋 {message.content.message}</p>
-            <p className="text-sm text-gray-400 mt-2">
-              Exemples de commandes:
+            <p className="font-display font-semibold mb-3 text-lg text-glow-cyan">
+              <span className="text-2xl mr-2">👋</span>
+              {message.content.message}
             </p>
-            <ul className="text-sm text-gray-400 mt-1 space-y-1">
-              <li>• "Tracer la fonction sin(x)*exp(-x)"</li>
-              <li>• "Simuler un projectile lancé à 45°"</li>
-              <li>• "Analyser un circuit RC avec R=1kΩ, C=1µF"</li>
+            <p className="text-sm text-cyber-cyan mt-3 mb-2 uppercase tracking-wide font-display">
+              ▸ Exemples de commandes:
+            </p>
+            <ul className="text-sm text-gray-300 mt-2 space-y-2">
+              <li className="flex items-start">
+                <span className="text-cyber-purple mr-2">▸</span>
+                "Tracer la fonction sin(x)*exp(-x)"
+              </li>
+              <li className="flex items-start">
+                <span className="text-cyber-cyan mr-2">▸</span>
+                "Simuler un projectile lancé à 45°"
+              </li>
+              <li className="flex items-start">
+                <span className="text-cyber-pink mr-2">▸</span>
+                "Analyser un circuit RC avec R=1kΩ, C=1µF"
+              </li>
             </ul>
           </div>
         ) : (
-          <pre className="text-sm overflow-x-auto">
+          <pre className="text-sm overflow-x-auto code-block">
             {JSON.stringify(message.content, null, 2)}
           </pre>
         )}
 
         {/* Timestamp */}
-        <div className="text-xs text-gray-500 mt-2">
+        <div className="text-xs text-cyber-cyan text-opacity-50 mt-3 font-display uppercase tracking-wider">
           {new Date(message.timestamp).toLocaleTimeString()}
         </div>
       </div>
@@ -231,7 +244,7 @@ function QuickButton({ onClick, children }) {
   return (
     <button
       onClick={onClick}
-      className="text-sm px-3 py-1 bg-nyx-dark border border-gray-600 rounded hover:border-nyx-accent transition-colors"
+      className="text-sm px-4 py-2 bg-cyber-navy bg-opacity-30 border border-cyber-cyan border-opacity-30 rounded hover:border-cyber-cyan hover:bg-cyber-cyan hover:bg-opacity-10 hover:shadow-neon-cyan transition-all duration-300 font-display uppercase tracking-wide text-cyber-cyan"
     >
       {children}
     </button>
