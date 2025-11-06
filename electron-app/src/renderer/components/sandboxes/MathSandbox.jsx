@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import Plot from 'react-plotly.js';
-import useNyxStore from '../store/nyxStore';
 import { X, Download, ZoomIn, ZoomOut, RotateCcw, Maximize2 } from 'lucide-react';
 
 function MathSandbox({ data }) {
