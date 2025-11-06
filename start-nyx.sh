@@ -83,19 +83,14 @@ if [ -d ".git" ]; then
         git stash push -m "Auto-stash before pull at $(date)"
     fi
 
-    # Pull from main
-    echo -e "${YELLOW}   git pull origin main${NC}"
-    git pull origin main --no-edit
+    # Pull from current branch
+    echo -e "${YELLOW}   git pull origin $CURRENT_BRANCH${NC}"
+    git pull origin "$CURRENT_BRANCH" --no-edit 2>/dev/null
 
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}✓ Mise à jour réussie${NC}\n"
     else
-        echo -e "${YELLOW}⚠ Mise à jour échouée (peut-être pas de connexion?)${NC}\n"
-    fi
-
-    # Return to original branch if different
-    if [ "$CURRENT_BRANCH" != "main" ]; then
-        git checkout "$CURRENT_BRANCH" 2>/dev/null
+        echo -e "${YELLOW}⚠ Mise à jour échouée ou pas de remote pour cette branche${NC}\n"
     fi
 else
     echo -e "${YELLOW}⚠ Pas un repository git, skip pull${NC}\n"
