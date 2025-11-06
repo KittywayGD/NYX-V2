@@ -40,11 +40,3 @@ contextBridge.exposeInMainWorld('systemInfo', {
   arch: process.arch,
   version: process.version,
 });
-
-// Console passthrough pour debug
-contextBridge.exposeInMainWorld('console', {
-  log: (...args) => console.log(...args),
-  error: (...args) => console.error(...args),
-  warn: (...args) => console.warn(...args),
-  info: (...args) => console.info(...args),
-});
