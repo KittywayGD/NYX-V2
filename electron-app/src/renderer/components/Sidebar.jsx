@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { MessageSquare, Box, Settings, HelpCircle } from 'lucide-react';
 import useNyxStore from '../store/nyxStore';
+import SettingsPanel from './SettingsPanel';
 
 function Sidebar() {
   const { clearMessages, modules } = useNyxStore();
+  const [showSettings, setShowSettings] = useState(false);
 
   return (
     <div className="w-16 bg-nyx-darker border-r border-gray-700 flex flex-col items-center py-4 space-y-4">
@@ -17,7 +20,11 @@ function Sidebar() {
       <nav className="flex-1 flex flex-col items-center space-y-4">
         <SidebarButton icon={<MessageSquare />} tooltip="Chat" active />
         <SidebarButton icon={<Box />} tooltip="Sandboxes" />
-        <SidebarButton icon={<Settings />} tooltip="Paramètres" />
+        <SidebarButton
+          icon={<Settings />}
+          tooltip="Paramètres"
+          onClick={() => setShowSettings(true)}
+        />
       </nav>
 
       <div className="h-px w-10 bg-gray-700"></div>
@@ -29,6 +36,9 @@ function Sidebar() {
       <div className="text-xs text-gray-500">
         {modules.length}
       </div>
+
+      {/* Settings Panel Modal */}
+      {showSettings && <SettingsPanel onClose={() => setShowSettings(false)} />}
     </div>
   );
 }

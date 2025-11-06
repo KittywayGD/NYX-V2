@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import useNyxStore from '../store/nyxStore';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, Download, Trash2 } from 'lucide-react';
+import { useKeyboardShortcuts } from '../utils/keyboardShortcuts';
 
 function ChatInterface() {
-  const { messages, queryNyx, isProcessing, currentQuery, setCurrentQuery } = useNyxStore();
+  const { messages, queryNyx, isProcessing, currentQuery, setCurrentQuery, clearMessages } = useNyxStore();
   const [input, setInput] = useState('');
+  const inputRef = useRef(null);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -16,19 +18,95 @@ function ChatInterface() {
   }, [messages]);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     if (input.trim() && !isProcessing) {
       queryNyx(input);
       setInput('');
     }
   };
 
+  const handleClearChat = () => {
+    if (confirm('Êtes-vous sûr de vouloir effacer tout l\'historique ?')) {
+      clearMessages();
+    }
+  };
+
+  const handleExportChat = (format = 'json') => {
+    const timestamp = new Date().toISOString().split('T')[0];
+    let content, mimeType, extension;
+
+    if (format === 'json') {
+      content = JSON.stringify(messages, null, 2);
+      mimeType = 'application/json';
+      extension = 'json';
+    } else if (format === 'markdown') {
+      content = messages
+        .map((msg) => {
+          const role = msg.role === 'user' ? '**Vous**' : '**NYX**';
+          const text = typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content, null, 2);
+          return `${role}: ${text}\n`;
+        })
+        .join('\n');
+      mimeType = 'text/markdown';
+      extension = 'md';
+    } else if (format === 'text') {
+      content = messages
+        .map((msg) => {
+          const role = msg.role === 'user' ? 'Vous' : 'NYX';
+          const text = typeof msg.content === 'string' ? msg.content : JSON.stringify(msg.content);
+          return `${role}: ${text}`;
+        })
+        .join('\n\n');
+      mimeType = 'text/plain';
+      extension = 'txt';
+    }
+
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `nyx-chat-${timestamp}.${extension}`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts(
+    {
+      SEND_MESSAGE: handleSubmit,
+      CLEAR_CHAT: handleClearChat,
+      FOCUS_INPUT: () => inputRef.current?.focus(),
+      EXPORT_CHAT: () => handleExportChat('json'),
+    },
+    [input, isProcessing, messages]
+  );
+
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="glass px-6 py-4 border-b border-gray-700">
-        <h2 className="text-xl font-bold text-nyx-accent">NYX-V2 Assistant</h2>
-        <p className="text-sm text-gray-400">Mathématiques • Physique • Électronique</p>
+      <div className="glass px-6 py-4 border-b border-gray-700 flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-nyx-accent">NYX-V2 Assistant</h2>
+          <p className="text-sm text-gray-400">Mathématiques • Physique • Électronique</p>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => handleExportChat('json')}
+            className="p-2 hover:bg-gray-700 rounded transition-colors"
+            title="Exporter le chat (Ctrl+Shift+E)"
+            aria-label="Export chat"
+          >
+            <Download className="w-5 h-5" />
+          </button>
+          <button
+            onClick={handleClearChat}
+            className="p-2 hover:bg-gray-700 rounded transition-colors text-red-400"
+            title="Effacer le chat (Ctrl+Shift+L)"
+            aria-label="Clear chat"
+          >
+            <Trash2 className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       {/* Messages */}
@@ -49,12 +127,14 @@ function ChatInterface() {
       <div className="glass p-4 border-t border-gray-700">
         <form onSubmit={handleSubmit} className="flex gap-3">
           <input
+            ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Posez votre question scientifique..."
+            placeholder="Posez votre question scientifique... (Ctrl+Enter pour envoyer)"
             className="flex-1 bg-nyx-dark border border-gray-600 rounded-lg px-4 py-2 focus:outline-none focus:border-nyx-accent transition-colors"
             disabled={isProcessing}
+            aria-label="Question scientifique"
           />
           <button
             type="submit"
